@@ -1,0 +1,4 @@
+['remote "data"']
+url = gdrive://1ubgnwNKc_6NyheEq7JztmCbXvpMWKcGv
+gdrive_client_id = 399976230950-kpoqd9mv7mrtpshcjg59tgo5ji3ca91u.apps.googleusercontent.com
+gdrive_client_secret = ***REMOVED***

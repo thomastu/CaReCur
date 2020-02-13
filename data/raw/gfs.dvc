@@ -1,0 +1,7 @@
+md5: d7adef5ac2bc4725915bf591d00a1723
+outs:
+- md5: 923906ac68980108e493af502edea8e0.dir
+  path: gfs
+  cache: true
+  metric: false
+  persist: false
