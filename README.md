@@ -3,6 +3,11 @@ carecur
 
 California Renewables Curtailment project.
 
+Quickstart
+----------
+
+1.  This project will use google drive as a dvc remote for internal sharing.  Upon running dvc pull for the first time, you will be asked to login to your google account and paste a resulting oauth token that will be valid for 30 days on your computer.
+
 Project Organization
 ------------
 
