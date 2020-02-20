@@ -1,0 +1,14 @@
+md5: 463aebbf1c8ac272b2f92213f8b47f3d
+cmd: python src/data/gfs.py
+wdir: ../..
+deps:
+- md5: 56076e42035f6a62fbfc332aac0ff5de
+  path: src/data/gfs.py
+- md5: b8dd14c9b5d88d309c3e53a53cdd038e.dir
+  path: data/raw/gfs
+outs:
+- md5: 2cec4d33b324139d183616bb7f3139c4.dir
+  path: data/processed/gfs
+  cache: true
+  metric: false
+  persist: false

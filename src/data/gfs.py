@@ -28,7 +28,7 @@ if __name__ == "__main__":
             "tcc" # Total Cloud Cover
         ],
     }
-    datasets = []
+    data = None
     for fp_ in list(files_):
         logger.info("Parsing {fp}", fp=fp_)
         _datasets = []
@@ -41,9 +41,11 @@ if __name__ == "__main__":
                 logger.warning("GRB2 file {fp} does not contain {level}", fp=fp_, level=level)
                 continue
             _datasets.append(ds[[dvar for dvar in dvars if dvar in ds.data_vars]])
-        datasets.append(xr.combine_by_coords(_datasets).expand_dims("valid_time"))
-                    
-    combined = xr.merge(datasets)
-    ddf = combined.to_dask_dataframe()
-    ddf.to_parquet(settings.DATA_DIR / "processed/gfs/")
+        if data is not None:
+            data = xr.merge([data, xr.combine_by_coords(_datasets).expand_dims("valid_time")])
+        else:
+            data = xr.combine_by_coords(_datasets).expand_dims("valid_time")
+
+    ddf = data.to_dask_dataframe()
+    ddf.to_parquet(settings.DATA_DIR / "processed/gfs/",  partition_on=["latitude", "longitude"])
 
