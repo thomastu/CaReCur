@@ -1,6 +1,9 @@
 name: "Doc Builder"
-on: 
-- commit
+
+on:
+  push:
+    branches:
+    - master
 
 jobs:
   docs:
