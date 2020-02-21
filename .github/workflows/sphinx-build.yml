@@ -1,6 +1,6 @@
-name: "Pull Request Docs Check"
+name: "Doc Builder"
 on: 
-- pull_request
+- commit
 
 jobs:
   docs:
