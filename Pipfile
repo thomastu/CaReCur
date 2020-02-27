@@ -25,6 +25,7 @@ dask = {extras = ["dataframe"],version = "*"}
 toolz = "*"
 fastparquet = "*"
 loguru = "*"
+siphon = "*"
 
 [requires]
 python_version = "3.7"
