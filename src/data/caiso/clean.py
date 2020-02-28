@@ -109,7 +109,8 @@ def parse(fp):
         )
 
     cols_to_drop = data.columns[data.columns.str.contains("_(x|y)$")].tolist()
-    data.drop(columns=cols_to_drop)
+    logger.debug("Dropping columns from CAISO data: {cols}", cols=cols_to_drop)
+    data.drop(columns=cols_to_drop, inplace=True)
     return data
 
 
@@ -129,7 +130,7 @@ def main(output_dir=settings.DATA_DIR / "processed/caiso"):
             # If the file already exists, assume we should be appending to it
             append = output_fp.exists()
 
-            logger.info("Writing (append={append}) {year} data from {fp}", append=append, year=yr, fp=fp)
+            logger.info("Writing (append={append}) {year} data from {fp}", append=append, year=partition.year, fp=fp)
 
             df.tz_convert("UTC").to_parquet(
                 output_fp, 
