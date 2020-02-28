@@ -18,6 +18,7 @@ if __name__ == "__main__":
             "t", # Air Temperature
             "gust", # Wind speed
             "tp", # Precipitation
+            "dswrf", # Downward Short Wave Radiation (This means sunshine)
         ],
         # "isobaricInhPa": [
         #    "u", #"wind_speed_u"

@@ -1,7 +1,0 @@
-md5: 529458c227200ccfefef8cf8e089340d
-outs:
-- md5: e3803c912779e0c766249a2bddc696a2.dir
-  path: gfs
-  cache: true
-  metric: false
-  persist: false

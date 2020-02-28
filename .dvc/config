@@ -1,6 +1,6 @@
 [core]
-    remote = localstorage
+    remote = gs
 ['remote "localstorage"']
     url = /home/ttu/Storage1/carecur-data/
 ['remote "gs"']
-    url = gs://carecur-data/
+    url = gs://carecur/

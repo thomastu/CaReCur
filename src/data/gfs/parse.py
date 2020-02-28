@@ -8,7 +8,7 @@ from src.conf import settings
 
 
 if __name__ == "__main__":
-    """Read .grb2 files as xarrays, and write results to 
+    """Read .grb2 files as xarrays, and write results as a parquet dataset.
     """
 
     gfs_dir = settings.DATA_DIR / "raw/gfs/"

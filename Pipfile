@@ -7,6 +7,8 @@ verify_ssl = true
 pylint = "*"
 ipykernel = "*"
 black = "*"
+jupyter = "*"
+notebook = "*"
 
 [packages]
 src = {editable = true,file = "file:///home/ttu/Documents/school/ENGR699/CaReCur"}
@@ -26,6 +28,10 @@ toolz = "*"
 fastparquet = "*"
 loguru = "*"
 siphon = "*"
+xlrd = "*"
+python-snappy = "*"
+altair = "*"
+altair-data-server = "*"
 
 [requires]
 python_version = "3.7"
