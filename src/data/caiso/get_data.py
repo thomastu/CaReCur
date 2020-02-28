@@ -30,7 +30,7 @@ def main():
     for url in generate_urls():
         logger.info("Downloading CAISO Curtailment file at: {url}", url=url)
         fn = Path(urlparse(url).path).name
-        with requests.get(url, stream=True, chunk_size=5 * 1024*1024) as response:
+        with requests.get(url) as response:
             response.raise_for_status()
             fp = OUTPUT_DIR / fn
             with open(fp, "wb") as fh:

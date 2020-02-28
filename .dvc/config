@@ -1,5 +1,7 @@
 [core]
     remote = gs
+[cache]
+    dir = ../dvc-cache/
 ['remote "localstorage"']
     url = /home/ttu/Storage1/carecur-data/
 ['remote "gs"']
