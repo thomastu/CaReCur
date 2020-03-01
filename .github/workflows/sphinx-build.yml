@@ -10,9 +10,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+   
+    - name: Setup Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.6'
+        architecture: 'x64'
+
+    - name: Cache dependencies
+      uses: actions/cache@v1
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pipenv
+        pipenv install --system --deploy
+
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
+
     - uses: actions/upload-artifact@v1
       with:
         name: DocumentationHTML
