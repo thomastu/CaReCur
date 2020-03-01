@@ -27,6 +27,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        sudo apt-get install libsnappy-dev  
         python3 -m pip install --upgrade pipenv
         pipenv install --system --deploy
 
