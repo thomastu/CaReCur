@@ -11,7 +11,7 @@ jupyter = "*"
 notebook = "*"
 
 [packages]
-src = {editable = true,file = "file:///home/ttu/Documents/school/ENGR699/CaReCur"}
+src = {editable = true,file = "."}
 click = "*"
 coverage = "*"
 awscli = "*"
