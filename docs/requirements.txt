@@ -1,0 +1,6 @@
+dynaconf
+nbsphinx
+graphviz
+sphinxcontrib-plantuml
+sphinxcontrib-bibtex
+recommonmark

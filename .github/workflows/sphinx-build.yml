@@ -16,26 +16,10 @@ jobs:
       with:
         python-version: '3.6'
         architecture: 'x64'
-
-    - name: Cache dependencies
-      uses: actions/cache@v1
+    - uses: ammaraskar/sphinx-action@master
       with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-
-    - name: Install dependencies
-      run: |
-        sudo apt-get install libsnappy-dev  
-        python3 -m pip install --upgrade pipenv
-        pipenv install --system --deploy
-
-    - name: Build Documentation
-      run: |
-        cd docs/
-        make html
-
+        docs-folder: "docs/"
+        pre-build-command: "apt-get update -y && apt-get install -y plantuml latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended"
     - uses: actions/upload-artifact@v1
       with:
         name: DocumentationHTML
