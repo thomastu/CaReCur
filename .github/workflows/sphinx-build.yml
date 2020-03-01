@@ -31,9 +31,10 @@ jobs:
         python3 -m pip install --upgrade pipenv
         pipenv install --system --deploy
 
-    - uses: ammaraskar/sphinx-action@master
-      with:
-        docs-folder: "docs/"
+    - name: Build Documentation
+      run: |
+        cd docs/
+        make html
 
     - uses: actions/upload-artifact@v1
       with:
