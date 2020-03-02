@@ -6,4 +6,5 @@ California Renewable Curtailments
    :caption: Contents:
 
    background
+   eda
    zreferences
