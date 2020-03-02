@@ -32,7 +32,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # Parsers for source file extensions
 source_suffix = {
     '.rst': 'restructuredtext',
-    '.txt': 'markdown',
     '.md': 'markdown',
 }
 

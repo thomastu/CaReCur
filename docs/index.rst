@@ -6,5 +6,5 @@ California Renewable Curtailments
    :caption: Contents:
 
    background
-   ../notebooks/0-ttu-curtailments_eda
+   eda
    zreferences
