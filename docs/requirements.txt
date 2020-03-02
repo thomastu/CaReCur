@@ -4,3 +4,4 @@ graphviz
 sphinxcontrib-plantuml
 sphinxcontrib-bibtex
 recommonmark
+pandoc
