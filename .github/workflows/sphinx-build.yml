@@ -30,7 +30,7 @@ jobs:
         cp -r docs/_build/html/* gh-pages/
         cd gh-pages
         # HACK: send altair data
-        cp notebooks/*json gh-pages/notebooks/
+        cp "notebooks/"*"json" gh-pages/notebooks/
         touch .nojekyll
         git config --local user.email "thomasthetu@gmail.com"
         git config --local user.name "Thomas Tu"
