@@ -32,6 +32,7 @@ xlrd = "*"
 python-snappy = "*"
 altair = "*"
 altair-data-server = "*"
+statsmodels = "*"
 
 [requires]
 python_version = "3.7"
