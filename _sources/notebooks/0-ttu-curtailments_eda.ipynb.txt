@@ -1,6 +1,15 @@
 {
  "cells": [
   {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Exploratory Data Analysis\n",
+    "\n",
+    "The purpose of this notebook is to explore potential relationships and build an intuition about the distribution of curtailment events.  Naively, we are looking to find dimensions on which we might cluster or categorize different curtailment events, and to understand any seasonality or time dependence in the data."
+   ]
+  },
+  {
    "cell_type": "code",
    "execution_count": 1,
    "metadata": {},
@@ -31,7 +40,10 @@
    ],
    "source": [
     "# Enable Altair to Serve data from disk since we expect to have at least 8760 rows or more\n",
-    "alt.data_transformers.enable('json')"
+    "alt.data_transformers.enable('json')\n",
+    "\n",
+    "# Uncomment if using JupyterLab (see: https://github.com/altair-viz/altair/issues/1867)\n",
+    "# alt.data_transformers.enable(\"data_server\")"
    ]
   },
   {
@@ -40,10 +52,24 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "year = 2018\n",
+    "df = pd.concat(\n",
+    "    [\n",
+    "        pd.read_parquet(fp_) for fp_ in settings.DATA_DIR.glob(\"processed/caiso/*.parquet\")\n",
+    "    ]\n",
+    ").tz_convert(tz=\"US/Pacific\")\n",
     "\n",
-    "df = pd.read_parquet(settings.DATA_DIR / f\"processed/caiso/{year}.parquet\").tz_convert(tz=\"US/Pacific\")\n",
+    "# Single Year for debugging\n",
     "\n",
+    "# year = 2019\n",
+    "# df = pd.read_parquet(settings.DATA_DIR / f\"processed/caiso/{year}.parquet\").tz_convert(tz=\"US/Pacific\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [],
+   "source": [
     "column_map = zip(\n",
     "    df.columns.tolist(), \n",
     "    df.columns.str.replace(\"\\W+\", \"_\").str.lower().tolist()\n",
@@ -56,7 +82,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Data Dictionary\n",
+    "**Data Dictionary**\n",
     "\n",
     "- load (MW): Total demand across the CAISO for a given interval.\n",
     "- solar (MW): Average interval Solar production\n",
@@ -75,7 +101,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 4,
+   "execution_count": 5,
    "metadata": {},
    "outputs": [
     {
@@ -257,7 +283,7 @@
        "2018-01-01 00:20:00-08:00                NaN  "
       ]
      },
-     "execution_count": 4,
+     "execution_count": 5,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -271,14 +297,16 @@
    "metadata": {},
    "source": [
     "Since our interval timeseries are not continuous and complete (i.e. significant irregular gaps exist across years), we must convert this to MWh to get additivity.\n",
-    "All columns are in MW at 5 minute intervals. MWh are calculated by taking\n",
+    "All columns are in MW at 5 minute intervals. \n",
     "\n",
-    "$MWh = MW  5[min]\\frac{1[hour]}{60[min]}$"
+    "MWh are calculated by taking\n",
+    "\n",
+    "$MWh = MW  5[min]\\frac{1[hour]}{60[min]}$\n"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 6,
    "metadata": {},
    "outputs": [
     {
@@ -460,7 +488,7 @@
        "2018-01-01 00:20:00-08:00                NaN  "
       ]
      },
-     "execution_count": 5,
+     "execution_count": 6,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -471,12 +499,19 @@
    ]
   },
   {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "We roll up our data to an hourly basis to remove effects from sub-hourly markets and highly localized or temporal weather events."
+   ]
+  },
+  {
    "cell_type": "code",
-   "execution_count": 6,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [],
    "source": [
-    "# Roll up to hourly 8760\n",
+    "# Roll up to hourly 8760 by year\n",
     "hourly_mwh = df_mwh.groupby(\n",
     "    by=pd.Grouper(freq=\"H\")\n",
     ")[[\"solar_curtailment\", \"solar\", \"net_load\", \"load\", \"generation\", \"renewables\", \"wind_curtailment\"]].sum()\n",
@@ -502,6 +537,46 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
+    "For convenience, we define a subset of data with some non-zero amount of curtailment."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "curtailment_days = hourly_mwh.query(\"solar_curtailment > 0\").reset_index()\n",
+    "curtailment_days = pd.concat(\n",
+    "    [_dat.sort_values(\"solar_curtailment\", ascending=False).reset_index(drop=True).reset_index() for (grp, _dat) in curtailment_days.groupby(by=curtailment_days[\"timestamp\"].dt.year)],\n",
+    "    ignore_index=True\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Due to correlation between nearby hours, we are also interested in a daily totals."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "daily_curtailment = curtailment_days.groupby(\n",
+    "    by=pd.Grouper(key=\"timestamp\", freq=\"D\")\n",
+    ")[[\"solar\", \"solar_curtailment\", \"net_load\", \"load\", \"generation\", \"renewables\", \"wind_curtailment\"]].sum()\n",
+    "daily_curtailment[\"curtailment_intensity\"] = daily_curtailment.eval(\"solar_curtailment/solar\")\n",
+    "daily_curtailment.reset_index(inplace=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
     "# Exploration: How much annual Curtailment is there?\n",
     "\n",
     "We are primarily interested in finding explanatory variables for curtailment.  We are interested specifically in time dependence at the hour-scale.  The goal of this study is to identify exogenous data sets which could explain a given curtailment day."
@@ -511,14 +586,16 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## Chart Definitions"
+    "**Chart Definitions**"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 10,
    "metadata": {
-    "scrolled": false
+    "jupyter": {
+     "source_hidden": true
+    }
    },
    "outputs": [],
    "source": [
@@ -529,7 +606,7 @@
     "    hourly_mwh.reset_index()\n",
     ").mark_rect().encode(\n",
     "    alt.Y(\"hours(timestamp):T\", title=\"Hour of Day\", sort=\"descending\"), \n",
-    "    alt.X(\"monthdate(timestamp):T\", title=\"Date\", sort=\"ascending\"),\n",
+    "    alt.X(\"yearmonthdate(timestamp):T\", title=\"Date\", sort=\"ascending\"),\n",
     "    alt.Color(\n",
     "        alt.repeat(\"row\"), \n",
     "        type=\"quantitative\", \n",
@@ -558,8 +635,12 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 8,
-   "metadata": {},
+   "execution_count": 11,
+   "metadata": {
+    "jupyter": {
+     "source_hidden": true
+    }
+   },
    "outputs": [],
    "source": [
     "# A better version of the chart above with units and things but not interactive\n",
@@ -568,7 +649,7 @@
     "    hourly_mwh.reset_index()\n",
     ").mark_rect().encode(\n",
     "    alt.Y(\"hours(timestamp):T\", title=\"Hour of Day\", sort=\"descending\"), \n",
-    "    alt.X(\"monthdate(timestamp):T\", title=\"Date\", sort=\"ascending\"),\n",
+    "    alt.X(\"yearmonthdate(timestamp):T\", title=\"Date\", sort=\"ascending\"),\n",
     ").properties(\n",
     "    width=1500,\n",
     "    height=250\n",
@@ -589,7 +670,7 @@
     "            \"solar:Q\", \n",
     "              scale=alt.Scale(type=\"pow\", exponent=2, scheme=\"redgrey\"),\n",
     "              sort=\"descending\",\n",
-    "              title=\"Solar Output\",\n",
+    "              title=\"Solar Output (MW)\",\n",
     "              legend=alt.Legend(orient=\"top\"),\n",
     "        )\n",
     "    ),\n",
@@ -598,7 +679,7 @@
     "            \"curtailment_intensity:Q\", \n",
     "            scale=alt.Scale(scheme=\"redgrey\", type=\"pow\", exponent=1/4, domain=[0,1]), \n",
     "            sort=\"descending\", \n",
-    "            title=\"MWh Cur. per MWh Prod.\",\n",
+    "            title=\"MWh Cur. per MWh Load\",\n",
     "            legend=alt.Legend(orient=\"top\"),\n",
     "        )\n",
     "    )\n",
@@ -607,33 +688,67 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 9,
-   "metadata": {},
+   "execution_count": 12,
+   "metadata": {
+    "jupyter": {
+     "source_hidden": true
+    }
+   },
    "outputs": [],
    "source": [
     "# Let's inspect our curtailed hours a bit more closely\n",
-    "curtailment_days = hourly_mwh.query(\"solar_curtailment > 0\").reset_index()\n",
-    "load_chart = alt.hconcat(\n",
-    "    alt.Chart(curtailment_days.sort_values(\"solar_curtailment\", ascending=False).reset_index(drop=True).reset_index()).mark_line().encode(\n",
-    "        alt.Y(\"solar_curtailment\", title=\"Solar Curtailment (MW)\"),\n",
-    "        alt.X(\"index\", title=\"rank\")\n",
-    "    ),\n",
-    "    alt.Chart(curtailment_days).mark_point().encode(\n",
-    "        alt.X(\"load\", title=\"Load (MW)\"),\n",
-    "        alt.Y(\"solar_curtailment\", title=\"Solar Curtailment (MW)\")\n",
-    "    )\n",
+    "load_chart = alt.Chart(curtailment_days).mark_line().encode(\n",
+    "    alt.X(\"index\", title=\"rank\"),\n",
+    "    alt.Y(\"solar_curtailment\", title=\"Solar Curtailment (MW)\"),\n",
+    ").facet(\"year(timestamp):N\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {
+    "jupyter": {
+     "source_hidden": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "curtail_v_solar_production = alt.Chart(curtailment_days).mark_point().encode(\n",
+    "    alt.X(\"solar\", title=\"Solar Production\"),\n",
+    "    alt.Y(\"solar_curtailment\", title=\"Solar Curtailment (MW)\"),\n",
+    "    alt.Color(\"month(timestamp):N\", scale=alt.Scale(scheme=\"tableau20\")),\n",
+    "    alt.Facet(\"year(timestamp):O\", columns=3)\n",
     ")"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 10,
+   "execution_count": 14,
    "metadata": {},
    "outputs": [],
    "source": [
-    "curtail_v_solar_production = alt.Chart(curtailment_days).mark_point().encode(\n",
-    "    alt.X(\"solar\", title=\"Solar Production\"),\n",
-    "    alt.Y(\"solar_curtailment\", title=\"Solar Curtailment (MW)\")\n",
+    "base = alt.Chart().mark_point().encode(\n",
+    "    alt.X(\"monthdate(timestamp):T\", title=\"Date (hour)\"),\n",
+    "    alt.Y(\"curtailment_intensity\", title=\"Curtailment Intensity (MW/MW)\"),\n",
+    "    alt.Color(\"load:Q\", scale=alt.Scale(scheme=\"redyellowblue\"), sort=\"descending\", title=\"Load (MW)\"),\n",
+    "    # alt.Facet(\"year(timestamp):O\", columns=3)\n",
+    ")\n",
+    "\n",
+    "curtailment_intensity = alt.layer(base, data=curtailment_days.query(\"curtailment_intensity < 1\")).facet(\"year(timestamp):O\")\n",
+    "daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(\"year(timestamp):O\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "daily_curtailment_vs_load = alt.Chart(daily_curtailment).mark_point().encode(\n",
+    "    alt.X(\"load\", title=\"Load (MWh)\"),\n",
+    "    alt.Y(\"solar_curtailment\", title=\"Daily Solar Curtailment (MWh)\"),\n",
+    "    alt.Color(\"month(timestamp):N\", scale=alt.Scale(scheme=\"tableau20\")),\n",
+    "    alt.Facet(\"year(timestamp):O\"),\n",
     ")"
    ]
   },
@@ -641,22 +756,26 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## Graphs and Things"
+    "# Curtailment Characteristics"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 11,
-   "metadata": {},
+   "execution_count": 16,
+   "metadata": {
+    "jupyter": {
+     "source_hidden": true
+    }
+   },
    "outputs": [
     {
      "data": {
       "text/html": [
        "\n",
-       "<div id=\"altair-viz-c836d05dcee94baebd022111c397ec4e\"></div>\n",
+       "<div id=\"altair-viz-189ff014212b4191928b223457405c32\"></div>\n",
        "<script type=\"text/javascript\">\n",
        "  (function(spec, embedOpt){\n",
-       "    const outputDiv = document.getElementById(\"altair-viz-c836d05dcee94baebd022111c397ec4e\");\n",
+       "    const outputDiv = document.getElementById(\"altair-viz-189ff014212b4191928b223457405c32\");\n",
        "    const paths = {\n",
        "      \"vega\": \"https://cdn.jsdelivr.net/npm//vega@5?noext\",\n",
        "      \"vega-lib\": \"https://cdn.jsdelivr.net/npm//vega-lib?noext\",\n",
@@ -697,14 +816,14 @@
        "        .catch(showError)\n",
        "        .then(() => displayChart(vegaEmbed));\n",
        "    }\n",
-       "  })({\"config\": {\"view\": {\"continuousWidth\": 400, \"continuousHeight\": 300}}, \"vconcat\": [{\"mark\": \"rect\", \"encoding\": {\"color\": {\"type\": \"quantitative\", \"field\": \"solar_curtailment\", \"legend\": {\"orient\": \"top\"}, \"scale\": {\"exponent\": 0.25, \"scheme\": \"redgrey\", \"type\": \"pow\"}, \"sort\": \"descending\", \"title\": \"Solar Curtailment (MWh)\"}, \"x\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"ascending\", \"timeUnit\": \"monthdate\", \"title\": \"Date\"}, \"y\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"descending\", \"timeUnit\": \"hours\", \"title\": \"Hour of Day\"}}, \"height\": 250, \"width\": 1500}, {\"mark\": \"rect\", \"encoding\": {\"color\": {\"type\": \"quantitative\", \"field\": \"solar\", \"legend\": {\"orient\": \"top\"}, \"scale\": {\"exponent\": 2, \"scheme\": \"redgrey\", \"type\": \"pow\"}, \"sort\": \"descending\", \"title\": \"Solar Output\"}, \"x\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"ascending\", \"timeUnit\": \"monthdate\", \"title\": \"Date\"}, \"y\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"descending\", \"timeUnit\": \"hours\", \"title\": \"Hour of Day\"}}, \"height\": 250, \"width\": 1500}, {\"mark\": \"rect\", \"encoding\": {\"color\": {\"type\": \"quantitative\", \"field\": \"curtailment_intensity\", \"legend\": {\"orient\": \"top\"}, \"scale\": {\"domain\": [0, 1], \"exponent\": 0.25, \"scheme\": \"redgrey\", \"type\": \"pow\"}, \"sort\": \"descending\", \"title\": \"MWh Cur. per MWh Prod.\"}, \"x\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"ascending\", \"timeUnit\": \"monthdate\", \"title\": \"Date\"}, \"y\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"descending\", \"timeUnit\": \"hours\", \"title\": \"Hour of Day\"}}, \"height\": 250, \"width\": 1500}], \"data\": {\"url\": \"altair-data-5dad7292c989f054ac5dd2759482c43a.json\", \"format\": {\"type\": \"json\"}}, \"resolve\": {\"scale\": {\"color\": \"independent\"}}, \"$schema\": \"https://vega.github.io/schema/vega-lite/v4.0.2.json\"}, {\"mode\": \"vega-lite\"});\n",
+       "  })({\"config\": {\"view\": {\"continuousWidth\": 400, \"continuousHeight\": 300}}, \"vconcat\": [{\"mark\": \"rect\", \"encoding\": {\"color\": {\"type\": \"quantitative\", \"field\": \"solar_curtailment\", \"legend\": {\"orient\": \"top\"}, \"scale\": {\"exponent\": 0.25, \"scheme\": \"redgrey\", \"type\": \"pow\"}, \"sort\": \"descending\", \"title\": \"Solar Curtailment (MWh)\"}, \"x\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"ascending\", \"timeUnit\": \"yearmonthdate\", \"title\": \"Date\"}, \"y\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"descending\", \"timeUnit\": \"hours\", \"title\": \"Hour of Day\"}}, \"height\": 250, \"width\": 1500}, {\"mark\": \"rect\", \"encoding\": {\"color\": {\"type\": \"quantitative\", \"field\": \"solar\", \"legend\": {\"orient\": \"top\"}, \"scale\": {\"exponent\": 2, \"scheme\": \"redgrey\", \"type\": \"pow\"}, \"sort\": \"descending\", \"title\": \"Solar Output (MW)\"}, \"x\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"ascending\", \"timeUnit\": \"yearmonthdate\", \"title\": \"Date\"}, \"y\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"descending\", \"timeUnit\": \"hours\", \"title\": \"Hour of Day\"}}, \"height\": 250, \"width\": 1500}, {\"mark\": \"rect\", \"encoding\": {\"color\": {\"type\": \"quantitative\", \"field\": \"curtailment_intensity\", \"legend\": {\"orient\": \"top\"}, \"scale\": {\"domain\": [0, 1], \"exponent\": 0.25, \"scheme\": \"redgrey\", \"type\": \"pow\"}, \"sort\": \"descending\", \"title\": \"MWh Cur. per MWh Load\"}, \"x\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"ascending\", \"timeUnit\": \"yearmonthdate\", \"title\": \"Date\"}, \"y\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"sort\": \"descending\", \"timeUnit\": \"hours\", \"title\": \"Hour of Day\"}}, \"height\": 250, \"width\": 1500}], \"data\": {\"url\": \"altair-data-8767f94f57bc68fc2bcb426e8cdfb60c.json\", \"format\": {\"type\": \"json\"}}, \"resolve\": {\"scale\": {\"color\": \"independent\"}}, \"$schema\": \"https://vega.github.io/schema/vega-lite/v4.0.2.json\"}, {\"mode\": \"vega-lite\"});\n",
        "</script>"
       ],
       "text/plain": [
        "alt.VConcatChart(...)"
       ]
      },
-     "execution_count": 11,
+     "execution_count": 16,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -717,22 +836,28 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "By visual inspection, we can see that solar capacity is well utilized during the summer season.  Two large curtailment \"zones\" or \"clusters\" appear to exist -- one centered around mid-March, and the other around mid-October."
+    "Shown above are\n",
+    "\n",
+    "- Hourly Solar curtailment in $x^{.25}$ scale to exaggerate visual differences in curtailment scale.\n",
+    "- Hourly Solar Output (MW) in $x^{2}$ scale. \n",
+    "- Hourly Curtailment \"Intensity\" w.r.t. Load (MW) in $x^{.25}$ scale. \n",
+    "\n",
+    "By visual inspection, two large curtailment \"zones\" or \"clusters\" appear to exist -- one centered around mid-March, and the other around mid-October.  Another prominent feature is the fast adoption of solar over time. "
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 12,
+   "execution_count": 17,
    "metadata": {},
    "outputs": [
     {
      "data": {
       "text/html": [
        "\n",
-       "<div id=\"altair-viz-f3f7aeb4f77a42e985e9aca88bdcd32a\"></div>\n",
+       "<div id=\"altair-viz-516930e66ad64e328bed79c07b985e4b\"></div>\n",
        "<script type=\"text/javascript\">\n",
        "  (function(spec, embedOpt){\n",
-       "    const outputDiv = document.getElementById(\"altair-viz-f3f7aeb4f77a42e985e9aca88bdcd32a\");\n",
+       "    const outputDiv = document.getElementById(\"altair-viz-516930e66ad64e328bed79c07b985e4b\");\n",
        "    const paths = {\n",
        "      \"vega\": \"https://cdn.jsdelivr.net/npm//vega@5?noext\",\n",
        "      \"vega-lib\": \"https://cdn.jsdelivr.net/npm//vega-lib?noext\",\n",
@@ -773,14 +898,90 @@
        "        .catch(showError)\n",
        "        .then(() => displayChart(vegaEmbed));\n",
        "    }\n",
-       "  })({\"config\": {\"view\": {\"continuousWidth\": 400, \"continuousHeight\": 300}}, \"hconcat\": [{\"data\": {\"url\": \"altair-data-d1240aa69c3b73de2fb36a518398fc82.json\", \"format\": {\"type\": \"json\"}}, \"mark\": \"line\", \"encoding\": {\"x\": {\"type\": \"quantitative\", \"field\": \"index\", \"title\": \"rank\"}, \"y\": {\"type\": \"quantitative\", \"field\": \"solar_curtailment\", \"title\": \"Solar Curtailment (MW)\"}}}, {\"data\": {\"url\": \"altair-data-c7c6b47d8bc377b2e088f7afe5d00102.json\", \"format\": {\"type\": \"json\"}}, \"mark\": \"point\", \"encoding\": {\"x\": {\"type\": \"quantitative\", \"field\": \"load\", \"title\": \"Load (MW)\"}, \"y\": {\"type\": \"quantitative\", \"field\": \"solar_curtailment\", \"title\": \"Solar Curtailment (MW)\"}}}], \"$schema\": \"https://vega.github.io/schema/vega-lite/v4.0.2.json\"}, {\"mode\": \"vega-lite\"});\n",
+       "  })({\"config\": {\"view\": {\"continuousWidth\": 400, \"continuousHeight\": 300}}, \"data\": {\"url\": \"altair-data-9626a23229823ccf8aa1fb8154a92332.json\", \"format\": {\"type\": \"json\"}}, \"mark\": \"point\", \"encoding\": {\"color\": {\"type\": \"nominal\", \"field\": \"timestamp\", \"scale\": {\"scheme\": \"tableau20\"}, \"timeUnit\": \"month\"}, \"facet\": {\"type\": \"ordinal\", \"field\": \"timestamp\", \"timeUnit\": \"year\"}, \"x\": {\"type\": \"quantitative\", \"field\": \"load\", \"title\": \"Load (MWh)\"}, \"y\": {\"type\": \"quantitative\", \"field\": \"solar_curtailment\", \"title\": \"Daily Solar Curtailment (MWh)\"}}, \"$schema\": \"https://vega.github.io/schema/vega-lite/v4.0.2.json\"}, {\"mode\": \"vega-lite\"});\n",
        "</script>"
       ],
       "text/plain": [
-       "alt.HConcatChart(...)"
+       "alt.Chart(...)"
       ]
      },
-     "execution_count": 12,
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "daily_curtailment_vs_load"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "By inspection, we can see a very rough pattern of high curtailment events during periods of \"medium\" load.  Intuitively, we might imagine these correspond to days with very high solar production, and very low demand (e.g. sunny in the desert, and temperate in populated centers.)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "\n",
+       "<div id=\"altair-viz-003c4963c6d84b7685d196ba0acb2f21\"></div>\n",
+       "<script type=\"text/javascript\">\n",
+       "  (function(spec, embedOpt){\n",
+       "    const outputDiv = document.getElementById(\"altair-viz-003c4963c6d84b7685d196ba0acb2f21\");\n",
+       "    const paths = {\n",
+       "      \"vega\": \"https://cdn.jsdelivr.net/npm//vega@5?noext\",\n",
+       "      \"vega-lib\": \"https://cdn.jsdelivr.net/npm//vega-lib?noext\",\n",
+       "      \"vega-lite\": \"https://cdn.jsdelivr.net/npm//vega-lite@4.0.2?noext\",\n",
+       "      \"vega-embed\": \"https://cdn.jsdelivr.net/npm//vega-embed@6?noext\",\n",
+       "    };\n",
+       "\n",
+       "    function loadScript(lib) {\n",
+       "      return new Promise(function(resolve, reject) {\n",
+       "        var s = document.createElement('script');\n",
+       "        s.src = paths[lib];\n",
+       "        s.async = true;\n",
+       "        s.onload = () => resolve(paths[lib]);\n",
+       "        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);\n",
+       "        document.getElementsByTagName(\"head\")[0].appendChild(s);\n",
+       "      });\n",
+       "    }\n",
+       "\n",
+       "    function showError(err) {\n",
+       "      outputDiv.innerHTML = `<div class=\"error\" style=\"color:red;\">${err}</div>`;\n",
+       "      throw err;\n",
+       "    }\n",
+       "\n",
+       "    function displayChart(vegaEmbed) {\n",
+       "      vegaEmbed(outputDiv, spec, embedOpt)\n",
+       "        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));\n",
+       "    }\n",
+       "\n",
+       "    if(typeof define === \"function\" && define.amd) {\n",
+       "      requirejs.config({paths});\n",
+       "      require([\"vega-embed\"], displayChart, err => showError(`Error loading script: ${err.message}`));\n",
+       "    } else if (typeof vegaEmbed === \"function\") {\n",
+       "      displayChart(vegaEmbed);\n",
+       "    } else {\n",
+       "      loadScript(\"vega\")\n",
+       "        .then(() => loadScript(\"vega-lite\"))\n",
+       "        .then(() => loadScript(\"vega-embed\"))\n",
+       "        .catch(showError)\n",
+       "        .then(() => displayChart(vegaEmbed));\n",
+       "    }\n",
+       "  })({\"config\": {\"view\": {\"continuousWidth\": 400, \"continuousHeight\": 300}}, \"data\": {\"url\": \"altair-data-aa76323a2337d21c7fe93fe2ec9b40f4.json\", \"format\": {\"type\": \"json\"}}, \"facet\": {\"type\": \"nominal\", \"field\": \"timestamp\", \"timeUnit\": \"year\"}, \"spec\": {\"mark\": \"line\", \"encoding\": {\"x\": {\"type\": \"quantitative\", \"field\": \"index\", \"title\": \"rank\"}, \"y\": {\"type\": \"quantitative\", \"field\": \"solar_curtailment\", \"title\": \"Solar Curtailment (MW)\"}}}, \"$schema\": \"https://vega.github.io/schema/vega-lite/v4.0.2.json\"}, {\"mode\": \"vega-lite\"});\n",
+       "</script>"
+      ],
+      "text/plain": [
+       "alt.FacetChart(...)"
+      ]
+     },
+     "execution_count": 18,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -793,22 +994,22 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "By inspection, we can see a very rough pattern of high curtailment events during periods of low load.  Intuitively, we might imagine these correspond to days with very high solar production, and very low demand (e.g. sunny in the desert, and temperate at load centers.)  When there is more demand, there is likely more opportunity for the magic algorithm to prioritize lower-cost resources.  WIthin the \"low load\" area (20k - 25k MW), "
+    "Hourly curtailment by year in MW - Over time, the available curtailed capacity has increased drastically (by a factor of 3 from 2016 to 2019)."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": 13,
+   "execution_count": 19,
    "metadata": {},
    "outputs": [
     {
      "data": {
       "text/html": [
        "\n",
-       "<div id=\"altair-viz-c08332eea3fd4b03ab1ae9c6711d4c07\"></div>\n",
+       "<div id=\"altair-viz-edc4aa442af549a08c063c9b427e75ad\"></div>\n",
        "<script type=\"text/javascript\">\n",
        "  (function(spec, embedOpt){\n",
-       "    const outputDiv = document.getElementById(\"altair-viz-c08332eea3fd4b03ab1ae9c6711d4c07\");\n",
+       "    const outputDiv = document.getElementById(\"altair-viz-edc4aa442af549a08c063c9b427e75ad\");\n",
        "    const paths = {\n",
        "      \"vega\": \"https://cdn.jsdelivr.net/npm//vega@5?noext\",\n",
        "      \"vega-lib\": \"https://cdn.jsdelivr.net/npm//vega-lib?noext\",\n",
@@ -849,14 +1050,14 @@
        "        .catch(showError)\n",
        "        .then(() => displayChart(vegaEmbed));\n",
        "    }\n",
-       "  })({\"config\": {\"view\": {\"continuousWidth\": 400, \"continuousHeight\": 300}}, \"data\": {\"url\": \"altair-data-c7c6b47d8bc377b2e088f7afe5d00102.json\", \"format\": {\"type\": \"json\"}}, \"mark\": \"point\", \"encoding\": {\"x\": {\"type\": \"quantitative\", \"field\": \"solar\", \"title\": \"Solar Production\"}, \"y\": {\"type\": \"quantitative\", \"field\": \"solar_curtailment\", \"title\": \"Solar Curtailment (MW)\"}}, \"$schema\": \"https://vega.github.io/schema/vega-lite/v4.0.2.json\"}, {\"mode\": \"vega-lite\"});\n",
+       "  })({\"config\": {\"view\": {\"continuousWidth\": 400, \"continuousHeight\": 300}}, \"data\": {\"url\": \"altair-data-aa76323a2337d21c7fe93fe2ec9b40f4.json\", \"format\": {\"type\": \"json\"}}, \"mark\": \"point\", \"encoding\": {\"color\": {\"type\": \"nominal\", \"field\": \"timestamp\", \"scale\": {\"scheme\": \"tableau20\"}, \"timeUnit\": \"month\"}, \"facet\": {\"type\": \"ordinal\", \"columns\": 3, \"field\": \"timestamp\", \"timeUnit\": \"year\"}, \"x\": {\"type\": \"quantitative\", \"field\": \"solar\", \"title\": \"Solar Production\"}, \"y\": {\"type\": \"quantitative\", \"field\": \"solar_curtailment\", \"title\": \"Solar Curtailment (MW)\"}}, \"$schema\": \"https://vega.github.io/schema/vega-lite/v4.0.2.json\"}, {\"mode\": \"vega-lite\"});\n",
        "</script>"
       ],
       "text/plain": [
        "alt.Chart(...)"
       ]
      },
-     "execution_count": 13,
+     "execution_count": 19,
      "metadata": {},
      "output_type": "execute_result"
     }
@@ -869,22 +1070,175 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Intuitively, there exists a \"curtailment boundary\", where for a given hour of production, there exists a maximum curtailment event. This could represent the total solar capacity for that hour."
+    "One metric of interest may be the amount of solar curtailment per unit of solar production.  Each mark represents a single hour in a year.  By visual inspection, a vague envelope is visible on the right hand side.  The sum of curtailment and production might represent the total solar capacity in a given hour.  By inspection, we can also observe a larger portion of curtailment is occurring year on year."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 20,
+   "metadata": {
+    "jupyter": {
+     "source_hidden": true
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "\n",
+       "<div id=\"altair-viz-2b7fbaf63fad49be83a6e2302b3baad3\"></div>\n",
+       "<script type=\"text/javascript\">\n",
+       "  (function(spec, embedOpt){\n",
+       "    const outputDiv = document.getElementById(\"altair-viz-2b7fbaf63fad49be83a6e2302b3baad3\");\n",
+       "    const paths = {\n",
+       "      \"vega\": \"https://cdn.jsdelivr.net/npm//vega@5?noext\",\n",
+       "      \"vega-lib\": \"https://cdn.jsdelivr.net/npm//vega-lib?noext\",\n",
+       "      \"vega-lite\": \"https://cdn.jsdelivr.net/npm//vega-lite@4.0.2?noext\",\n",
+       "      \"vega-embed\": \"https://cdn.jsdelivr.net/npm//vega-embed@6?noext\",\n",
+       "    };\n",
+       "\n",
+       "    function loadScript(lib) {\n",
+       "      return new Promise(function(resolve, reject) {\n",
+       "        var s = document.createElement('script');\n",
+       "        s.src = paths[lib];\n",
+       "        s.async = true;\n",
+       "        s.onload = () => resolve(paths[lib]);\n",
+       "        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);\n",
+       "        document.getElementsByTagName(\"head\")[0].appendChild(s);\n",
+       "      });\n",
+       "    }\n",
+       "\n",
+       "    function showError(err) {\n",
+       "      outputDiv.innerHTML = `<div class=\"error\" style=\"color:red;\">${err}</div>`;\n",
+       "      throw err;\n",
+       "    }\n",
+       "\n",
+       "    function displayChart(vegaEmbed) {\n",
+       "      vegaEmbed(outputDiv, spec, embedOpt)\n",
+       "        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));\n",
+       "    }\n",
+       "\n",
+       "    if(typeof define === \"function\" && define.amd) {\n",
+       "      requirejs.config({paths});\n",
+       "      require([\"vega-embed\"], displayChart, err => showError(`Error loading script: ${err.message}`));\n",
+       "    } else if (typeof vegaEmbed === \"function\") {\n",
+       "      displayChart(vegaEmbed);\n",
+       "    } else {\n",
+       "      loadScript(\"vega\")\n",
+       "        .then(() => loadScript(\"vega-lite\"))\n",
+       "        .then(() => loadScript(\"vega-embed\"))\n",
+       "        .catch(showError)\n",
+       "        .then(() => displayChart(vegaEmbed));\n",
+       "    }\n",
+       "  })({\"config\": {\"view\": {\"continuousWidth\": 400, \"continuousHeight\": 300}}, \"data\": {\"url\": \"altair-data-8e812fa5c1a3c9b1ee4384d7578b869b.json\", \"format\": {\"type\": \"json\"}}, \"facet\": {\"type\": \"ordinal\", \"field\": \"timestamp\", \"timeUnit\": \"year\"}, \"spec\": {\"layer\": [{\"mark\": \"point\", \"encoding\": {\"color\": {\"type\": \"quantitative\", \"field\": \"load\", \"scale\": {\"scheme\": \"redyellowblue\"}, \"sort\": \"descending\", \"title\": \"Load (MW)\"}, \"x\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"timeUnit\": \"monthdate\", \"title\": \"Date (hour)\"}, \"y\": {\"type\": \"quantitative\", \"field\": \"curtailment_intensity\", \"title\": \"Curtailment Intensity (MW/MW)\"}}}]}, \"$schema\": \"https://vega.github.io/schema/vega-lite/v4.0.2.json\"}, {\"mode\": \"vega-lite\"});\n",
+       "</script>"
+      ],
+      "text/plain": [
+       "alt.FacetChart(...)"
+      ]
+     },
+     "execution_count": 20,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "curtailment_intensity"
+   ]
+  },
+  {
+   "cell_type": "markdown",
    "metadata": {},
-   "outputs": [],
-   "source": []
+   "source": [
+    "Hourly curtailment per unit of solar production.  A value of 1 represents an hour where 50% of solar capacity is curtailed."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "metadata": {
+    "jupyter": {
+     "source_hidden": true
+    }
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "\n",
+       "<div id=\"altair-viz-4cff7d3fe2e34125bb9866e5519c1be9\"></div>\n",
+       "<script type=\"text/javascript\">\n",
+       "  (function(spec, embedOpt){\n",
+       "    const outputDiv = document.getElementById(\"altair-viz-4cff7d3fe2e34125bb9866e5519c1be9\");\n",
+       "    const paths = {\n",
+       "      \"vega\": \"https://cdn.jsdelivr.net/npm//vega@5?noext\",\n",
+       "      \"vega-lib\": \"https://cdn.jsdelivr.net/npm//vega-lib?noext\",\n",
+       "      \"vega-lite\": \"https://cdn.jsdelivr.net/npm//vega-lite@4.0.2?noext\",\n",
+       "      \"vega-embed\": \"https://cdn.jsdelivr.net/npm//vega-embed@6?noext\",\n",
+       "    };\n",
+       "\n",
+       "    function loadScript(lib) {\n",
+       "      return new Promise(function(resolve, reject) {\n",
+       "        var s = document.createElement('script');\n",
+       "        s.src = paths[lib];\n",
+       "        s.async = true;\n",
+       "        s.onload = () => resolve(paths[lib]);\n",
+       "        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);\n",
+       "        document.getElementsByTagName(\"head\")[0].appendChild(s);\n",
+       "      });\n",
+       "    }\n",
+       "\n",
+       "    function showError(err) {\n",
+       "      outputDiv.innerHTML = `<div class=\"error\" style=\"color:red;\">${err}</div>`;\n",
+       "      throw err;\n",
+       "    }\n",
+       "\n",
+       "    function displayChart(vegaEmbed) {\n",
+       "      vegaEmbed(outputDiv, spec, embedOpt)\n",
+       "        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));\n",
+       "    }\n",
+       "\n",
+       "    if(typeof define === \"function\" && define.amd) {\n",
+       "      requirejs.config({paths});\n",
+       "      require([\"vega-embed\"], displayChart, err => showError(`Error loading script: ${err.message}`));\n",
+       "    } else if (typeof vegaEmbed === \"function\") {\n",
+       "      displayChart(vegaEmbed);\n",
+       "    } else {\n",
+       "      loadScript(\"vega\")\n",
+       "        .then(() => loadScript(\"vega-lite\"))\n",
+       "        .then(() => loadScript(\"vega-embed\"))\n",
+       "        .catch(showError)\n",
+       "        .then(() => displayChart(vegaEmbed));\n",
+       "    }\n",
+       "  })({\"config\": {\"view\": {\"continuousWidth\": 400, \"continuousHeight\": 300}}, \"data\": {\"url\": \"altair-data-9626a23229823ccf8aa1fb8154a92332.json\", \"format\": {\"type\": \"json\"}}, \"facet\": {\"type\": \"ordinal\", \"field\": \"timestamp\", \"timeUnit\": \"year\"}, \"spec\": {\"layer\": [{\"mark\": \"point\", \"encoding\": {\"color\": {\"type\": \"quantitative\", \"field\": \"load\", \"scale\": {\"scheme\": \"redyellowblue\"}, \"sort\": \"descending\", \"title\": \"Load (MW)\"}, \"x\": {\"type\": \"temporal\", \"field\": \"timestamp\", \"timeUnit\": \"monthdate\", \"title\": \"Date (hour)\"}, \"y\": {\"type\": \"quantitative\", \"field\": \"curtailment_intensity\", \"title\": \"Curtailment Intensity (MW/MW)\"}}}]}, \"$schema\": \"https://vega.github.io/schema/vega-lite/v4.0.2.json\"}, {\"mode\": \"vega-lite\"});\n",
+       "</script>"
+      ],
+      "text/plain": [
+       "alt.FacetChart(...)"
+      ]
+     },
+     "execution_count": 21,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "daily_curtailment_intensity"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Total daily curtailment per unit of solar production.  A value of 1 represents a day where 50% of solar capacity is curtailed.  "
+   ]
   }
  ],
  "metadata": {
   "kernelspec": {
-   "display_name": "Python 3.7.5 64-bit ('CaReCur': pipenv)",
+   "display_name": "Python 3.7.6 64-bit ('CaReCur': pipenv)",
    "language": "python",
-   "name": "python37564bitcarecurpipenv63e52fa4abd84338bf4705c2d07e9d0a"
+   "name": "python37664bitcarecurpipenv318f26dc7d1c4bbea8c84f6bd8ce7bff"
   },
   "language_info": {
    "codemirror_mode": {
@@ -896,7 +1250,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.7.5"
+   "version": "3.7.6"
   }
  },
  "nbformat": 4,
