@@ -19,11 +19,6 @@ if __name__ == "__main__":
             "gust", # Wind speed
             "tp", # Precipitation
         ],
-        # "isobaricInhPa": [
-        #    "u", #"wind_speed_u"
-        #    "v", #"wind_speed_v"
-        #    "r", #"relative_humidity"
-        #   ]
         "atmosphere": [
             "tcc" # Total Cloud Cover
         ],

@@ -1,5 +1,4 @@
-"""
-
+"""The THREDDS catalog is a live GRIB service which enables access to filtered views.
 """
 from siphon.catalog import TDSCatalog
 from siphon.ncss import NCSS

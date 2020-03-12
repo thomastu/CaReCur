@@ -33,6 +33,8 @@ python-snappy = "*"
 altair = "*"
 altair-data-server = "*"
 statsmodels = "*"
+sklearn = "*"
+seaborn = "*"
 
 [requires]
 python_version = "3.7"

@@ -116,10 +116,15 @@ latex_elements = {
 
 # -- HTML Settings -----
 
-html_theme = "alabaster"
+html_theme = "haiku"
 
 html_static_path = ["static"]
 
+html_theme_options = {
+    # Disable showing the sidebar. Defaults to 'false'
+    "nosidebar": True,
+    "relbarbgcolor": "black"
+}
 
 # -- TODOS Settings -----
 
