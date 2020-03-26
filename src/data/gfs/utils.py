@@ -26,7 +26,9 @@ class InvalidGRIBInventory(Exception):
     pass
 
 
-def parse_grib2_inventory_slug(s):
+def parse_grib2_inventory(s):
+    """
+    """
     match = pat.match(s)
     if match is None:
         raise InvalidGRIBInventory(f"{s} is not a valid GRIB2 inventory.")
