@@ -12,7 +12,7 @@
 Debian/Linux
 
 ```
-sudo apt install libeccodes0
+sudo apt install libeccodes0 libspatialindex-dev
 ```
 
 MacOS

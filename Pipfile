@@ -35,6 +35,9 @@ altair-data-server = "*"
 statsmodels = "*"
 sklearn = "*"
 seaborn = "*"
+geopandas = "*"
+descartes = "*"
+rtree = "*"
 
 [requires]
 python_version = "3.7"
