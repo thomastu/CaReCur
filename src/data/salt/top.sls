@@ -1,0 +1,4 @@
+base:
+    "*":
+        - screen
+        - python-pip
