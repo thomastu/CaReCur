@@ -4,11 +4,13 @@ python-pip:
       - python3-pip
 
 install_pipenv:
-  pip3.installed:
+  pip.installed:
     - name: pipenv
     - upgrade: True
+    - pip_bin: pip3
   
 install_dvc:
-  pip3.installed:
+  pip.installed:
     - name: dvc
     - upgrade: False
+    - pip_bin: pip3
