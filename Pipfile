@@ -40,6 +40,8 @@ descartes = "*"
 rtree = "*"
 invoke = "*"
 google-cloud-storage = "*"
+filelock = "*"
+ujson = "*"
 
 [requires]
 python_version = "3.7"

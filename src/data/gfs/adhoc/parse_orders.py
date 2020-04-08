@@ -20,7 +20,7 @@ from invoke import run
 
 logger.add(f"{__file__}_{{time}}.log", rotation="500 MB", compression="zip", backtrace=True, diagnose=True)
 
-# Each NOAA NCDC order contains an ID
+# Each NOAA NCDC order is identified by an ID signifying a valid 72-hour download window.
 order_ids = [
     # #####2018
     # "HAS011471200",
@@ -30,17 +30,17 @@ order_ids = [
     # "HAS011471208",
     # "HAS011471210",
     ###### 2017
-    "HAS011483669",
-    "HAS011483671",
-    "HAS011483673",
+    # "HAS011483669",
+    # "HAS011483671",
+    # "HAS011483673",
     # "HAS011483675",
-    "HAS011483677",
-    "HAS011483681",
+    # "HAS011483677",
+    # "HAS011483681",
     ###### 2019
-    "HAS011483683",
-    "HAS011483685",
-    "HAS011483690",
-    "HAS011483691",
+    # "HAS011483683",
+    # "HAS011483685",
+    # "HAS011483690",
+    # "HAS011483691",
     # "HAS011483694",
     # "HAS011483697",
 ]
@@ -69,4 +69,10 @@ def load_orders(order_id):
 
 if __name__ == "__main__":
     for order_id in order_ids:
-        load_orders(order_id)
+        try:
+            load_orders(order_id)
+        except Exception as e:
+            logger.exception(" Skipping {order_id}. Encountered an unexpected error: {e}",
+                order_id=order_id, 
+                e=e)
+            
