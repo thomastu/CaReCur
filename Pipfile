@@ -39,6 +39,7 @@ geopandas = "*"
 descartes = "*"
 rtree = "*"
 invoke = "*"
+google-cloud-storage = "*"
 
 [requires]
 python_version = "3.7"

@@ -2,6 +2,7 @@
 Filters down a directory of grb2 files to a specific geometry.
 """
 import os
+import click
 import pandas as pd
 import geopandas as gpd
 import xarray as xr
@@ -10,7 +11,12 @@ import tempfile
 
 from pathlib import Path
 from loguru import logger
+from google.cloud import storage
 
+from src.conf import settings
+
+
+OUTPUT_DIR = settings.DATA_DIR / "interim/gfs/ca/"
 
 os.environ.setdefault("SHAPE_RESTORE_SHX", "yes")
 
@@ -67,7 +73,7 @@ def parse_data(gfs_grb2_df: pd.DataFrame, envelope_gdf: gpd.GeoDataFrame):
     """
     df = gfs_grb2_df
     # Assert that there are no rows which are not poly types in our envelopes.
-    assert (~envelope_gdf.geom_type.isin(POLY_TYPES).sum()) == 0
+    assert (~envelope_gdf.geom_type.isin(POLY_TYPES)).sum() == 0
 
     # Convert Longitude3 (0, 360) to Longitude (-180, 180)
     lon = df["longitude"].where(df["longitude"] < 180, df["longitude"] - 360)
@@ -83,21 +89,29 @@ def parse_data(gfs_grb2_df: pd.DataFrame, envelope_gdf: gpd.GeoDataFrame):
     return gdf
 
 
-def parse_gfs_archive(gfs_archive):
+def parse_gfs_archive(gfs_archive, forecasts=["000", "024", "048", "072", "120", "168","240"]):
     """Parse a GFS Archive file
     """
+    logger.info("Parsing and unpacking {fp}", fp=gfs_archive)
     with tarfile.open(gfs_archive) as tf:
         tmpdir = Path(tempfile.mkdtemp())
         for tarinfo in tf:
+            logger.debug("Parsing {fp}/{fn}", fp=gfs_archive, fn=tarinfo.name)
+            # last 8 characters represent forecast
+            forecast = tarinfo.name[-8:-5]
+            if forecast not in forecasts:
+                logger.debug("Skipping... {fp}/{fn} not in forecasts.", fp=gfs_archive, fn=tarinfo.name)
+                continue
+
             fp = (Path(tmpdir)/tarinfo.name).absolute()
             # Extract member from tar archive
-            tf.extract(tarinfo, path=fp)
+            tf.extract(tarinfo, path=tmpdir)
 
             # Parse single forecast
             gdf = parse_gribfile(fp)
 
             # Yield GeoDataFrame of weather data
-            yield gdf
+            yield gdf, tarinfo.name
 
             for fp_ in fp.parent.glob(f"{fp.name}*"):
                 os.remove(fp_)
@@ -105,20 +119,54 @@ def parse_gfs_archive(gfs_archive):
         tmpdir.rmdir()
 
 
-def main(gfs_archives, ca_envelope):
+def get_gfs_archives(project, prefix="grid3"):
+    """Download and yield pre-downloaded data from GFS grid 3.
+    """
+    client = storage.Client(project)
+    blobs = client.list_blobs("carecur-gfs-data", prefix="grid3/gfs_3_20180101")
+    for blob in blobs:
+        yield blob
 
-    # TODO:100 Figure out what are the different boundaries we might want!
-    # ca = gpd.read_file("./CA_Counties/CA_Counties_TIGER2016.shp")
-    ca = None
 
-    for gfs_archive in gfs_archives:
-        for gdf in parse_gfs_archive(gfs_archive):
-            gdf = parse_data(gdf, ca)
-            # TODO: Write GDF and send somewhere!!
-            # save_results(gs://...)
+def parse_archive(gfs_archive):
+    """Main parsing function for unit of data (single NOAA Archive)
+
+    Args:
+        gfs_archive (google.cloud.storage.blob.Blob): Storage blob object.
+    """
+    envelope = gpd.read_file(settings.DATA_DIR / "processed/geography/CA_Counties/CA_Counties_TIGER2016.shp")
+    _mode, fp_ = tempfile.mkstemp()
+    gfs_archive.download_to_filename(fp_)
+
+    for gdf, fn in parse_gfs_archive(fp_):
+        fn = Path(fn).stem
+        gdf = parse_data(gdf, envelope)
+        gdf.drop(columns="geometry").to_parquet(OUTPUT_DIR/f"{fn}.parquet")
+
+    os.remove(fp_)
+
+
+@click.command()
+@click.argument("project", type=str, )
+@click.option("-y", "--year", "year", type=int, required=False, default=None, help="Forecast year to parse")
+def main(project, year):
+    """Parse through gfs grid-3 archive data.
+
+    Arguments:
+    
+        project:  Google cloud project to bill data access to.
+    """
+    # Archive data only exist in this bucket for 2017 to 2018
+    if year:
+        assert year in range(2017, 2020)
+        prefix=f"grid3/gfs_3_{year}"
+    else:
+        prefix=f"grid3"
+    for gfs_archive in get_gfs_archives(project, prefix=prefix):
+        logger.info("Parsing archive {}", gfs_archive)
+        parse_archive(gfs_archive)
 
 
 if __name__ == "__main__":
-
-    # TODO:100 Get gfs_archives
-    # main()
+    OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
+    main()
