@@ -38,6 +38,7 @@ seaborn = "*"
 geopandas = "*"
 descartes = "*"
 rtree = "*"
+invoke = "*"
 
 [requires]
 python_version = "3.7"

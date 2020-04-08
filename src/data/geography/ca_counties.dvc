@@ -1,0 +1,17 @@
+md5: 01ca86da673b0a91a96dfb7052b00eae
+cmd: python src/data/geography/ca_counties.py
+wdir: ../../..
+deps:
+- md5: 6e749702bc16a50eb9987dbe28849c22
+  path: src/data/geography/ca_counties.py
+outs:
+- md5: e8071e03431bb93bbc5fa9e51469a7b8
+  path: data/raw/geography/ca-county-boundaries.zip
+  cache: true
+  metric: false
+  persist: false
+- md5: 650a684e924ad212dd95e40aedafc923.dir
+  path: data/processed/geography/CA_Counties
+  cache: true
+  metric: false
+  persist: false
