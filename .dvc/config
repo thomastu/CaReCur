@@ -1,5 +1,5 @@
 [core]
-    remote = gs
+    remote = carecur
 [cache]
     dir = ../dvc-cache
     gs = gscache
