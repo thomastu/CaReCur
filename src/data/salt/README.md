@@ -13,5 +13,6 @@ sudo sh bootstrap_salt.sh
 ```
 
 ```
-salt-call --config-dir=./src/data/salt --local highstate
+# Apply state
+sudo salt-call --config-dir=./src/data/salt --file-root=./src/data/salt --local state.apply
 ```

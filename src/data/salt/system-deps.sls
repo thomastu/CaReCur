@@ -3,3 +3,6 @@ libeccodes0:
 
 libspatialindex-dev:
     pkg.installed
+
+libsnappy-dev:
+    pkg.installed
