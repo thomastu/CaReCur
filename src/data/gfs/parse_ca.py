@@ -155,7 +155,7 @@ def main(project, year):
     # Archive data only exist in this bucket for 2017 to 2018
     if year:
         assert year in range(2017, 2020)
-        prefix=f"grid3/gfs_3_{year}010"
+        prefix=f"grid3/gfs_3_{year}"
     else:
         prefix=f"grid3"
 
