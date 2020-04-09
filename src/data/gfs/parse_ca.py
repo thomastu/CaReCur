@@ -135,10 +135,14 @@ def parse_archive(gfs_archive, forecasts=[]):
     # Download file from storage
     gfs_archive.download_to_filename(fp_)
 
-    for gdf, fn in parse_gfs_archive(fp_, forecasts=forecasts):
-        fn = Path(fn).stem
-        gdf = parse_data(gdf, envelope)
-        gdf.drop(columns="geometry").to_parquet(OUTPUT_DIR/f"{fn}.parquet")
+    # FIXME: Some 2019 files are throwing a keyerror.  We should resolve that error instead of silently failing.
+    try:
+        for gdf, fn in parse_gfs_archive(fp_, forecasts=forecasts):
+            fn = Path(fn).stem
+            gdf = parse_data(gdf, envelope)
+            gdf.drop(columns="geometry").to_parquet(OUTPUT_DIR/f"{fn}.parquet")
+    except Exception as e:
+        logger.exception(e)
 
     os.close(fd)
     os.remove(fp_)
@@ -182,6 +186,7 @@ def main(project, year):
                 fh.write(str(datetime.now()))
         logger.info("Parsing archive {}", gfs_archive)
         parse_archive(gfs_archive, forecasts=forecasts)
+
 
 if __name__ == "__main__":
     OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
