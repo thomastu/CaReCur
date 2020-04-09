@@ -11,6 +11,7 @@ import tempfile
 import ujson as json
 
 from datetime import datetime
+from invoke import run
 from pathlib import Path
 from loguru import logger
 from google.cloud import storage
@@ -129,7 +130,7 @@ def parse_archive(gfs_archive, forecasts=[]):
         gfs_archive (google.cloud.storage.blob.Blob): Storage blob object.
     """
     envelope = gpd.read_file(settings.DATA_DIR / "processed/geography/CA_Counties/CA_Counties_TIGER2016.shp")
-    _mode, fp_ = tempfile.mkstemp()
+    fd, fp_ = tempfile.mkstemp()
 
     # Download file from storage
     gfs_archive.download_to_filename(fp_)
@@ -139,6 +140,7 @@ def parse_archive(gfs_archive, forecasts=[]):
         gdf = parse_data(gdf, envelope)
         gdf.drop(columns="geometry").to_parquet(OUTPUT_DIR/f"{fn}.parquet")
 
+    os.close(fd)
     os.remove(fp_)
 
 
