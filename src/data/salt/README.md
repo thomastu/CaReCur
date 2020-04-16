@@ -16,3 +16,11 @@ sudo sh bootstrap_salt.sh
 # Apply state
 sudo salt-call --config-dir=./src/data/salt --file-root=./src/data/salt --local state.apply
 ```
+
+# Adhoc:
+```
+cd CaReCur
+git pull
+dvc pull
+pipenv run pip install aiocontextvars dataclasses
+```

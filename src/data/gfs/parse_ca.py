@@ -56,7 +56,7 @@ def parse_gribfile(fp: str):
         ds = ds.drop_vars("step")
     except KeyError:
         logger.warning(
-            "GRB2 file {fp} does not contain 'surface' data.", fp=gfs_grib2_fp
+            "GRB2 file {fp} does not contain 'surface' data.", fp=fp
         )
     data_vars = list(filter(lambda data_var: data_var in ds.data_vars, SURFACE_VARS))
     # Only retain variables of interest
@@ -95,7 +95,6 @@ def parse_gfs_archive(gfs_archive, forecasts=[]):
             # last 8 characters represent forecast
             forecast = tarinfo.name[-8:-5]
             if forecast not in forecasts:
-                logger.debug("Skipping... {fp}/{fn} not in forecasts.", fp=gfs_archive, fn=tarinfo.name)
                 continue
 
             fp = (Path(tmpdir)/tarinfo.name).absolute()
@@ -123,13 +122,13 @@ def get_gfs_archives(project, prefix="grid3"):
         yield blob
 
 
-def parse_archive(gfs_archive, forecasts=[]):
+def parse_archive(gfs_archive, envelope, forecasts=[]):
     """Main parsing function for unit of data (single NOAA Archive)
 
     Args:
         gfs_archive (google.cloud.storage.blob.Blob): Storage blob object.
     """
-    envelope = gpd.read_file(settings.DATA_DIR / "processed/geography/CA_Counties/CA_Counties_TIGER2016.shp")
+    
     fd, fp_ = tempfile.mkstemp()
 
     # Download file from storage
@@ -150,24 +149,35 @@ def parse_archive(gfs_archive, forecasts=[]):
 
 @click.command()
 @click.argument("project", type=str, )
-@click.option("-y", "--year", "year", type=int, required=False, default=None, help="Forecast year to parse")
-def main(project, year):
-    """Parse through gfs grid-3 archive data.
+@click.option("-y", "--year", "year", type=int, required=True, help="Forecast year to parse")
+@click.option("-m", "--month", "month", type=int, required=True, help="Forecast year to parse")
+def main(project, year, month):
+    """Parse through gfs grid-3 archive data for a single year and month.
 
     Arguments:
-    
+
         project:  Google cloud project to bill data access to.
     """
-    # Archive data only exist in this bucket for 2017 to 2018
-    if year:
-        assert year in range(2017, 2020)
-        prefix=f"grid3/gfs_3_{year}"
-    else:
-        prefix=f"grid3"
+    envelope = gpd.read_file(settings.DATA_DIR / "processed/geography/CA_Counties/CA_Counties_TIGER2016.shp")
+    # Parse out months as well!
 
-    # Point of forecast, day ahead, 2-day, 3-day, 5-day, 7-day and 10-day
+    # Archive data only exist in this bucket for 2017 to 2019
+    assert year in range(2017, 2020)
+    assert month in range(1, 13)
+
+    prefix=f"grid3/gfs_3_{year}{month:02}"
+
+    # Point of forecast, day ahead, and 7-day
+    # Note that forecasts are expresed as UTC, so we must account for US/Pacific.
     forecasts = [
-        "000", "024", "048", "072", "120", "168","240"
+        # Day of
+        *(f"{i*3:03}" for i in range(5, 10)),
+
+        # 24-hour
+        *(f"{i*3:03}" for i in range(13, 18)),
+
+        # 7-day
+        *(f"{i*3:03}" for i in range(61, 66))
     ]
 
     for gfs_archive in get_gfs_archives(project, prefix=prefix):
@@ -183,9 +193,14 @@ def main(project, year):
                 logger.debug("Skipping... {} already processed.", gfs_archive.name)
                 continue
             with status_file.open("w") as fh:
-                fh.write(str(datetime.now()))
+                fh.write(f"Started: {datetime.now()}")
+
         logger.info("Parsing archive {}", gfs_archive)
-        parse_archive(gfs_archive, forecasts=forecasts)
+        parse_archive(gfs_archive, envelope, forecasts=forecasts)
+    
+        with status_file.open("w") as fh:
+            fh.write(f"Completed: {datetime.now()}")
+        lock.release()
 
 
 if __name__ == "__main__":
