@@ -1,0 +1,5 @@
+stages:
+  ca_powerplants:
+    cmd: python src/data/cec/ca_powerplants.py
+    outs:
+    - data/raw/geography/powerplants.geojson
