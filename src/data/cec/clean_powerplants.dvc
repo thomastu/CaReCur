@@ -1,0 +1,12 @@
+md5: ad840cee93f622f809773eb063076da4
+cmd: python src/data/cec/clean_powerplants.py
+wdir: ../../..
+deps:
+- md5: d459ae28339e40fb46952be1f5b7392f
+  path: data/raw/geography/powerplants.geojson
+outs:
+- md5: 4af29ab0e33d1b7342c683251fe80d38
+  path: data/processed/geography/powerplants.parquet
+  cache: true
+  metric: false
+  persist: false

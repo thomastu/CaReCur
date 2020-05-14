@@ -1,5 +1,7 @@
 """
 Filters down a directory of grb2 files to a specific geometry.
+
+FIXME:100 There is a memory leak somewhere in this file.  No clue where, but at month-level granularities, you need at least 2GB ram/year-month.
 """
 import os
 import click
@@ -8,7 +10,6 @@ import geopandas as gpd
 import xarray as xr
 import tarfile
 import tempfile
-import ujson as json
 
 from datetime import datetime
 from invoke import run
@@ -88,6 +89,7 @@ def parse_gfs_archive(gfs_archive, forecasts=[]):
     """Parse a GFS Archive file
     """
     logger.info("Parsing and unpacking {fp}", fp=gfs_archive)
+    to_parse = []
     with tarfile.open(gfs_archive) as tf:
         tmpdir = Path(tempfile.mkdtemp())
         for tarinfo in tf:
@@ -98,19 +100,22 @@ def parse_gfs_archive(gfs_archive, forecasts=[]):
                 continue
 
             fp = (Path(tmpdir)/tarinfo.name).absolute()
+
             # Extract member from tar archive
             tf.extract(tarinfo, path=tmpdir)
 
-            # Parse single forecast
-            gdf = parse_gribfile(fp)
+            to_parse.append((fp, tarinfo.name))
 
-            # Yield GeoDataFrame of weather data
-            yield gdf, tarinfo.name
+    for fp, name in to_parse:
+        # Parse single forecast
+        gdf = parse_gribfile(fp)
 
-            for fp_ in fp.parent.glob(f"{fp.name}*"):
-                os.remove(fp_)
+        # Yield GeoDataFrame of weather data
+        yield gdf, name
 
-        tmpdir.rmdir()
+        for fp_ in fp.parent.glob(f"{fp.name}*"):
+            os.remove(fp_)
+    tmpdir.rmdir()
 
 
 def get_gfs_archives(project, prefix="grid3"):
@@ -151,7 +156,8 @@ def parse_archive(gfs_archive, envelope, forecasts=[]):
 @click.argument("project", type=str, )
 @click.option("-y", "--year", "year", type=int, required=True, help="Forecast year to parse")
 @click.option("-m", "--month", "month", type=int, required=True, help="Forecast year to parse")
-def main(project, year, month):
+@click.option("-d", "--day", "day", type=int, required=False, help="Forecast day to parse.")
+def main(project, year, month, day=None):
     """Parse through gfs grid-3 archive data for a single year and month.
 
     Arguments:
@@ -166,6 +172,8 @@ def main(project, year, month):
     assert month in range(1, 13)
 
     prefix=f"grid3/gfs_3_{year}{month:02}"
+    if day:
+        prefix = f"{prefix}{day:02}"
 
     # Point of forecast, day ahead, and 7-day
     # Note that forecasts are expresed as UTC, so we must account for US/Pacific.
@@ -179,7 +187,6 @@ def main(project, year, month):
         # 7-day
         *(f"{i*3:03}" for i in range(61, 66))
     ]
-
     for gfs_archive in get_gfs_archives(project, prefix=prefix):
         lockfile = OUTPUT_DIR / "status" / f"{gfs_archive.name}.txt.lock"
         if not lockfile.parent.exists():

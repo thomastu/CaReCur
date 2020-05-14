@@ -1,0 +1,1 @@
+gcloud beta compute scp --zone "us-west1-b" --project "carecur" carecur-gfs-data-server-1:/home/tt169_humboldt_edu/CaReCur/data/interim/ ~/repos/CaReCur/data/interim/ --recurse

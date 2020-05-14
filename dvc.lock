@@ -1,5 +1,0 @@
-ca_powerplants:
-  cmd: python src/data/cec/ca_powerplants.py
-  outs:
-  - path: data/raw/geography/powerplants.geojson
-    md5: d459ae28339e40fb46952be1f5b7392f

@@ -1,8 +1,8 @@
-md5: a07528b1a64ce904c71eeefcf8b87f3a
+md5: 414c0fb304e1b52b1e8d9e193f1aa44d
 cmd: python src/data/caiso/get_data.py
 wdir: ../../..
 outs:
-- md5: b5f74fdc9cad6c66e3b26416243917ea.dir
+- md5: eaf35cfd5f757554343703f10c6baa13.dir
   path: data/raw/caiso
   cache: true
   metric: false

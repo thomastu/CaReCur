@@ -1,11 +1,11 @@
-md5: afb16b5494ef31d372c16aba8784a413
+md5: e92830d3b0887b3ab59abc6c4f2a1e11
 cmd: python src/data/caiso/clean.py
 wdir: ../../..
 deps:
-- md5: b5f74fdc9cad6c66e3b26416243917ea.dir
+- md5: eaf35cfd5f757554343703f10c6baa13.dir
   path: data/raw/caiso
 outs:
-- md5: a8de7afb72ac5f5a0128ac19c7b48d02.dir
+- md5: 67c44aeb7a145d1b53ff0ef7fb609966.dir
   path: data/processed/caiso
   cache: true
   metric: false

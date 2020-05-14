@@ -27,7 +27,7 @@ class InvalidGRIBInventory(Exception):
     pass
 
 
-GRB2_CRS = "WGS84"
+GRB2_CRS = "EPSG:4326"
 """The GFS uses the WGS 84 Coordinate Reference System
 """
 
