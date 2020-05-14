@@ -81,18 +81,15 @@ if __name__ == "__main__":
 
     df = pd.concat(
         [
-            pd.read_parquet(settings.DATA_DIR / f"processed/caiso/{y}.parquet")
+            pd.read_parquet(settings.DATA_DIR / f"processed/caiso_hourly/{y}.parquet")
             for y in range(2017, 2020)
         ]
     )
 
-    df.columns = df.columns.str.lower().str.replace(" ", "_")
     df.index = df.index.tz_convert("US/Pacific")
 
-    # Daily resampling to avoid co-correlated data points.
-    # Note that we have a 5-min dataset, so we must first convert to mwh
-    # After that, summing to the daily level gives us mwh!
-    df = (df / 12.0).groupby(pd.Grouper(freq="D")).sum()
+    # Preprocessed hourly data is in MWh, so we can simply sum up to resample to days
+    df = df.groupby(pd.Grouper(freq="D")).sum()
 
     df.reset_index(inplace=True)
 
