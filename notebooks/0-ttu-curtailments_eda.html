@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -105,20 +105,33 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 4.5ex;
-    padding-top: 0.3rem;
-    padding-right: 0.3rem;
-    text-align: right;
-    flex: 0;
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
 }
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
 @media (max-width: 540px) {
     div.nbinput.container div.prompt,
     div.nboutput.container div.prompt {
+        width: unset;
         text-align: left;
         padding: 0.4em;
     }
     div.nboutput.container div.prompt.empty {
         padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
     }
 }
 
@@ -211,7 +224,7 @@ div.nboutput.container div.output_area div[class*=highlight].math,
 div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 0.3rem;
+    padding: 5px;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -276,29 +289,29 @@ from src.conf import settings
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span># Enable Altair to Serve data from disk since we expect to have at least 8760 rows or more
-alt.data_transformers.enable(&#39;json&#39;)
+# alt.data_transformers.enable(&#39;json&#39;)
 
 # Uncomment if using JupyterLab (see: https://github.com/altair-viz/altair/issues/1867)
-# alt.data_transformers.enable(&quot;data_server&quot;)
+alt.data_transformers.enable(&quot;data_server&quot;)
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-DataTransformerRegistry.enable(&#39;json&#39;)
+DataTransformerRegistry.enable(&#39;data_server&#39;)
 </pre></div></div>
 </div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -315,8 +328,19 @@ DataTransformerRegistry.enable(&#39;json&#39;)
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/ttu/.local/share/virtualenvs/CaReCur-b3qbtQ7S/lib/python3.7/site-packages/fastparquet/encoding.py:222: NumbaDeprecationWarning: <span class="ansi-bold">The &#39;numba.jitclass&#39; decorator has moved to &#39;numba.experimental.jitclass&#39; to better reflect the experimental nature of the functionality. Please update your imports to accommodate this change and see http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#change-of-jitclass-location for the time frame.</span>
+  Numpy8 = numba.jitclass(spec8)(NumpyIO)
+/home/ttu/.local/share/virtualenvs/CaReCur-b3qbtQ7S/lib/python3.7/site-packages/fastparquet/encoding.py:224: NumbaDeprecationWarning: <span class="ansi-bold">The &#39;numba.jitclass&#39; decorator has moved to &#39;numba.experimental.jitclass&#39; to better reflect the experimental nature of the functionality. Please update your imports to accommodate this change and see http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#change-of-jitclass-location for the time frame.</span>
+  Numpy32 = numba.jitclass(spec32)(NumpyIO)
+</pre></div></div>
+</div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -346,7 +370,7 @@ df = df.rename(columns=dict(column_map))
 <li><p>solar_curtailment (MW): Curtailed solar in a given interval</p></li>
 </ul>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -355,7 +379,7 @@ df = df.rename(columns=dict(column_map))
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -497,7 +521,7 @@ df = df.rename(columns=dict(column_map))
 <p>MWh are calculated by taking</p>
 <p><span class="math notranslate nohighlight">\(MWh = MW 5[min]\frac{1[hour]}{60[min]}\)</span></p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -507,7 +531,7 @@ df_mwh.head()
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
@@ -647,7 +671,7 @@ df_mwh.head()
 </div>
 <p>We roll up our data to an hourly basis to remove effects from sub-hourly markets and highly localized or temporal weather events.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -676,7 +700,7 @@ hourly_mwh[&quot;pct_renewable_potential&quot;] = (hourly_mwh[&quot;solar_curtai
 </div>
 <p>For convenience, we define a subset of data with some non-zero amount of curtailment.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -690,7 +714,7 @@ curtailment_days = pd.concat(
 </div>
 <p>Due to correlation between nearby hours, we are also interested in a daily totals.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -708,7 +732,7 @@ daily_curtailment.reset_index(inplace=True)
 <p>We are primarily interested in finding explanatory variables for curtailment. We are interested specifically in time dependence at the hour-scale. The goal of this study is to identify exogenous data sets which could explain a given curtailment day.</p>
 <p><strong>Chart Definitions</strong></p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -748,7 +772,7 @@ brush_chart = alt.layer(
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -797,7 +821,7 @@ fixed_chart = alt.vconcat(
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -810,7 +834,7 @@ load_chart = alt.Chart(curtailment_days).mark_line().encode(
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -824,7 +848,7 @@ load_chart = alt.Chart(curtailment_days).mark_line().encode(
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -841,7 +865,7 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
 </div>
 </div>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -858,27 +882,33 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
 <div class="section" id="Curtailment-Characteristics">
 <h1>Curtailment Characteristics<a class="headerlink" href="#Curtailment-Characteristics" title="Permalink to this headline">¶</a></h1>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>fixed_chart
+<span></span>alt.Chart(daily_curtailment).mark_bar().encode(
+    alt.X(&quot;yearmonth(timestamp):T&quot;, title=&quot;Month&quot;),
+    alt.Y(&quot;mean(solar_curtailment)&quot;, title=&quot;Mean Curtailment (MWh)&quot;)
+).interactive()
 </pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<div id="altair-viz-189ff014212b4191928b223457405c32"></div>
+<div id="altair-viz-9cfae4d59ce144d39dfdbfe35d9adcfe"></div>
 <script type="text/javascript">
   (function(spec, embedOpt){
-    const outputDiv = document.getElementById("altair-viz-189ff014212b4191928b223457405c32");
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-9cfae4d59ce144d39dfdbfe35d9adcfe") {
+      outputDiv = document.getElementById("altair-viz-9cfae4d59ce144d39dfdbfe35d9adcfe");
+    }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
       "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
-      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.0.2?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
       "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
     };
 
@@ -915,7 +945,71 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "vconcat": [{"mark": "rect", "encoding": {"color": {"type": "quantitative", "field": "solar_curtailment", "legend": {"orient": "top"}, "scale": {"exponent": 0.25, "scheme": "redgrey", "type": "pow"}, "sort": "descending", "title": "Solar Curtailment (MWh)"}, "x": {"type": "temporal", "field": "timestamp", "sort": "ascending", "timeUnit": "yearmonthdate", "title": "Date"}, "y": {"type": "temporal", "field": "timestamp", "sort": "descending", "timeUnit": "hours", "title": "Hour of Day"}}, "height": 250, "width": 1500}, {"mark": "rect", "encoding": {"color": {"type": "quantitative", "field": "solar", "legend": {"orient": "top"}, "scale": {"exponent": 2, "scheme": "redgrey", "type": "pow"}, "sort": "descending", "title": "Solar Output (MW)"}, "x": {"type": "temporal", "field": "timestamp", "sort": "ascending", "timeUnit": "yearmonthdate", "title": "Date"}, "y": {"type": "temporal", "field": "timestamp", "sort": "descending", "timeUnit": "hours", "title": "Hour of Day"}}, "height": 250, "width": 1500}, {"mark": "rect", "encoding": {"color": {"type": "quantitative", "field": "curtailment_intensity", "legend": {"orient": "top"}, "scale": {"domain": [0, 1], "exponent": 0.25, "scheme": "redgrey", "type": "pow"}, "sort": "descending", "title": "MWh Cur. per MWh Load"}, "x": {"type": "temporal", "field": "timestamp", "sort": "ascending", "timeUnit": "yearmonthdate", "title": "Date"}, "y": {"type": "temporal", "field": "timestamp", "sort": "descending", "timeUnit": "hours", "title": "Hour of Day"}}, "height": 250, "width": 1500}], "data": {"url": "altair-data-8767f94f57bc68fc2bcb426e8cdfb60c.json", "format": {"type": "json"}}, "resolve": {"scale": {"color": "independent"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.0.2.json"}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "http://localhost:15533/9626a23229823ccf8aa1fb8154a92332.json"}, "mark": "bar", "encoding": {"x": {"type": "temporal", "field": "timestamp", "timeUnit": "yearmonth", "title": "Month"}, "y": {"type": "quantitative", "aggregate": "mean", "field": "solar_curtailment", "title": "Mean Curtailment (MWh)"}}, "selection": {"selector002": {"type": "interval", "bind": "scales", "encodings": ["x", "y"]}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
+</script></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>fixed_chart
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div id="altair-viz-0c06084ef4f146cbbe14268d7f033530"></div>
+<script type="text/javascript">
+  (function(spec, embedOpt){
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-0c06084ef4f146cbbe14268d7f033530") {
+      outputDiv = document.getElementById("altair-viz-0c06084ef4f146cbbe14268d7f033530");
+    }
+    const paths = {
+      "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
+      "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
+      "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
+    };
+
+    function loadScript(lib) {
+      return new Promise(function(resolve, reject) {
+        var s = document.createElement('script');
+        s.src = paths[lib];
+        s.async = true;
+        s.onload = () => resolve(paths[lib]);
+        s.onerror = () => reject(`Error loading script: ${paths[lib]}`);
+        document.getElementsByTagName("head")[0].appendChild(s);
+      });
+    }
+
+    function showError(err) {
+      outputDiv.innerHTML = `<div class="error" style="color:red;">${err}</div>`;
+      throw err;
+    }
+
+    function displayChart(vegaEmbed) {
+      vegaEmbed(outputDiv, spec, embedOpt)
+        .catch(err => showError(`Javascript Error: ${err.message}<br>This usually means there's a typo in your chart specification. See the javascript console for the full traceback.`));
+    }
+
+    if(typeof define === "function" && define.amd) {
+      requirejs.config({paths});
+      require(["vega-embed"], displayChart, err => showError(`Error loading script: ${err.message}`));
+    } else if (typeof vegaEmbed === "function") {
+      displayChart(vegaEmbed);
+    } else {
+      loadScript("vega")
+        .then(() => loadScript("vega-lite"))
+        .then(() => loadScript("vega-embed"))
+        .catch(showError)
+        .then(() => displayChart(vegaEmbed));
+    }
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "vconcat": [{"mark": "rect", "encoding": {"color": {"type": "quantitative", "field": "solar_curtailment", "legend": {"orient": "top"}, "scale": {"exponent": 0.25, "scheme": "redgrey", "type": "pow"}, "sort": "descending", "title": "Solar Curtailment (MWh)"}, "x": {"type": "temporal", "field": "timestamp", "sort": "ascending", "timeUnit": "yearmonthdate", "title": "Date"}, "y": {"type": "temporal", "field": "timestamp", "sort": "descending", "timeUnit": "hours", "title": "Hour of Day"}}, "height": 250, "width": 1500}, {"mark": "rect", "encoding": {"color": {"type": "quantitative", "field": "solar", "legend": {"orient": "top"}, "scale": {"exponent": 2, "scheme": "redgrey", "type": "pow"}, "sort": "descending", "title": "Solar Output (MW)"}, "x": {"type": "temporal", "field": "timestamp", "sort": "ascending", "timeUnit": "yearmonthdate", "title": "Date"}, "y": {"type": "temporal", "field": "timestamp", "sort": "descending", "timeUnit": "hours", "title": "Hour of Day"}}, "height": 250, "width": 1500}, {"mark": "rect", "encoding": {"color": {"type": "quantitative", "field": "curtailment_intensity", "legend": {"orient": "top"}, "scale": {"domain": [0, 1], "exponent": 0.25, "scheme": "redgrey", "type": "pow"}, "sort": "descending", "title": "MWh Cur. per MWh Load"}, "x": {"type": "temporal", "field": "timestamp", "sort": "ascending", "timeUnit": "yearmonthdate", "title": "Date"}, "y": {"type": "temporal", "field": "timestamp", "sort": "descending", "timeUnit": "hours", "title": "Hour of Day"}}, "height": 250, "width": 1500}], "data": {"url": "http://localhost:15533/8767f94f57bc68fc2bcb426e8cdfb60c.json"}, "resolve": {"scale": {"color": "independent"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
 </script></div>
 </div>
 <p>Shown above are</p>
@@ -926,7 +1020,7 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
 </ul>
 <p>By visual inspection, two large curtailment “zones” or “clusters” appear to exist – one centered around mid-March, and the other around mid-October. Another prominent feature is the fast adoption of solar over time.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -935,18 +1029,21 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<div id="altair-viz-516930e66ad64e328bed79c07b985e4b"></div>
+<div id="altair-viz-ed9e4c796fed436abd6cd34b1f3b5fc2"></div>
 <script type="text/javascript">
   (function(spec, embedOpt){
-    const outputDiv = document.getElementById("altair-viz-516930e66ad64e328bed79c07b985e4b");
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-ed9e4c796fed436abd6cd34b1f3b5fc2") {
+      outputDiv = document.getElementById("altair-viz-ed9e4c796fed436abd6cd34b1f3b5fc2");
+    }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
       "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
-      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.0.2?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
       "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
     };
 
@@ -983,12 +1080,12 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "altair-data-9626a23229823ccf8aa1fb8154a92332.json", "format": {"type": "json"}}, "mark": "point", "encoding": {"color": {"type": "nominal", "field": "timestamp", "scale": {"scheme": "tableau20"}, "timeUnit": "month"}, "facet": {"type": "ordinal", "field": "timestamp", "timeUnit": "year"}, "x": {"type": "quantitative", "field": "load", "title": "Load (MWh)"}, "y": {"type": "quantitative", "field": "solar_curtailment", "title": "Daily Solar Curtailment (MWh)"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.0.2.json"}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "http://localhost:15533/9626a23229823ccf8aa1fb8154a92332.json"}, "mark": "point", "encoding": {"color": {"type": "nominal", "field": "timestamp", "scale": {"scheme": "tableau20"}, "timeUnit": "month"}, "facet": {"type": "ordinal", "field": "timestamp", "timeUnit": "year"}, "x": {"type": "quantitative", "field": "load", "title": "Load (MWh)"}, "y": {"type": "quantitative", "field": "solar_curtailment", "title": "Daily Solar Curtailment (MWh)"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
 </script></div>
 </div>
 <p>By inspection, we can see a very rough pattern of high curtailment events during periods of “medium” load. Intuitively, we might imagine these correspond to days with very high solar production, and very low demand (e.g. sunny in the desert, and temperate in populated centers.)</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -997,18 +1094,21 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<div id="altair-viz-003c4963c6d84b7685d196ba0acb2f21"></div>
+<div id="altair-viz-2a5f4a8928a641c293053a51230c6b51"></div>
 <script type="text/javascript">
   (function(spec, embedOpt){
-    const outputDiv = document.getElementById("altair-viz-003c4963c6d84b7685d196ba0acb2f21");
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-2a5f4a8928a641c293053a51230c6b51") {
+      outputDiv = document.getElementById("altair-viz-2a5f4a8928a641c293053a51230c6b51");
+    }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
       "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
-      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.0.2?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
       "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
     };
 
@@ -1045,12 +1145,12 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "altair-data-aa76323a2337d21c7fe93fe2ec9b40f4.json", "format": {"type": "json"}}, "facet": {"type": "nominal", "field": "timestamp", "timeUnit": "year"}, "spec": {"mark": "line", "encoding": {"x": {"type": "quantitative", "field": "index", "title": "rank"}, "y": {"type": "quantitative", "field": "solar_curtailment", "title": "Solar Curtailment (MW)"}}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.0.2.json"}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "http://localhost:15533/aa76323a2337d21c7fe93fe2ec9b40f4.json"}, "facet": {"type": "nominal", "field": "timestamp", "timeUnit": "year"}, "spec": {"mark": "line", "encoding": {"x": {"type": "quantitative", "field": "index", "title": "rank"}, "y": {"type": "quantitative", "field": "solar_curtailment", "title": "Solar Curtailment (MW)"}}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
 </script></div>
 </div>
 <p>Hourly curtailment by year in MW - Over time, the available curtailed capacity has increased drastically (by a factor of 3 from 2016 to 2019).</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1059,18 +1159,21 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<div id="altair-viz-edc4aa442af549a08c063c9b427e75ad"></div>
+<div id="altair-viz-1b9ab9b5904d4221a2cc9cdb7c01521d"></div>
 <script type="text/javascript">
   (function(spec, embedOpt){
-    const outputDiv = document.getElementById("altair-viz-edc4aa442af549a08c063c9b427e75ad");
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-1b9ab9b5904d4221a2cc9cdb7c01521d") {
+      outputDiv = document.getElementById("altair-viz-1b9ab9b5904d4221a2cc9cdb7c01521d");
+    }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
       "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
-      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.0.2?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
       "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
     };
 
@@ -1107,12 +1210,12 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "altair-data-aa76323a2337d21c7fe93fe2ec9b40f4.json", "format": {"type": "json"}}, "mark": "point", "encoding": {"color": {"type": "nominal", "field": "timestamp", "scale": {"scheme": "tableau20"}, "timeUnit": "month"}, "facet": {"type": "ordinal", "columns": 3, "field": "timestamp", "timeUnit": "year"}, "x": {"type": "quantitative", "field": "solar", "title": "Solar Production"}, "y": {"type": "quantitative", "field": "solar_curtailment", "title": "Solar Curtailment (MW)"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.0.2.json"}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "http://localhost:15533/aa76323a2337d21c7fe93fe2ec9b40f4.json"}, "mark": "point", "encoding": {"color": {"type": "nominal", "field": "timestamp", "scale": {"scheme": "tableau20"}, "timeUnit": "month"}, "facet": {"type": "ordinal", "columns": 3, "field": "timestamp", "timeUnit": "year"}, "x": {"type": "quantitative", "field": "solar", "title": "Solar Production"}, "y": {"type": "quantitative", "field": "solar_curtailment", "title": "Solar Curtailment (MW)"}}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
 </script></div>
 </div>
 <p>One metric of interest may be the amount of solar curtailment per unit of solar production. Each mark represents a single hour in a year. By visual inspection, a vague envelope is visible on the right hand side. The sum of curtailment and production might represent the total solar capacity in a given hour. By inspection, we can also observe a larger portion of curtailment is occurring year on year.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1121,18 +1224,21 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<div id="altair-viz-2b7fbaf63fad49be83a6e2302b3baad3"></div>
+<div id="altair-viz-348f8817d7b44642a1068c8e4cfe538b"></div>
 <script type="text/javascript">
   (function(spec, embedOpt){
-    const outputDiv = document.getElementById("altair-viz-2b7fbaf63fad49be83a6e2302b3baad3");
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-348f8817d7b44642a1068c8e4cfe538b") {
+      outputDiv = document.getElementById("altair-viz-348f8817d7b44642a1068c8e4cfe538b");
+    }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
       "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
-      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.0.2?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
       "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
     };
 
@@ -1169,12 +1275,12 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "altair-data-8e812fa5c1a3c9b1ee4384d7578b869b.json", "format": {"type": "json"}}, "facet": {"type": "ordinal", "field": "timestamp", "timeUnit": "year"}, "spec": {"layer": [{"mark": "point", "encoding": {"color": {"type": "quantitative", "field": "load", "scale": {"scheme": "redyellowblue"}, "sort": "descending", "title": "Load (MW)"}, "x": {"type": "temporal", "field": "timestamp", "timeUnit": "monthdate", "title": "Date (hour)"}, "y": {"type": "quantitative", "field": "curtailment_intensity", "title": "Curtailment Intensity (MW/MW)"}}}]}, "$schema": "https://vega.github.io/schema/vega-lite/v4.0.2.json"}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "http://localhost:15533/8e812fa5c1a3c9b1ee4384d7578b869b.json"}, "facet": {"type": "ordinal", "field": "timestamp", "timeUnit": "year"}, "spec": {"layer": [{"mark": "point", "encoding": {"color": {"type": "quantitative", "field": "load", "scale": {"scheme": "redyellowblue"}, "sort": "descending", "title": "Load (MW)"}, "x": {"type": "temporal", "field": "timestamp", "timeUnit": "monthdate", "title": "Date (hour)"}, "y": {"type": "quantitative", "field": "curtailment_intensity", "title": "Curtailment Intensity (MW/MW)"}}}]}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
 </script></div>
 </div>
 <p>Hourly curtailment per unit of solar production. A value of 1 represents an hour where 50% of solar capacity is curtailed.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1183,18 +1289,21 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="output_area rendered_html docutils container">
-<div id="altair-viz-4cff7d3fe2e34125bb9866e5519c1be9"></div>
+<div id="altair-viz-ca35df7fe6a14239aab44ed291f457db"></div>
 <script type="text/javascript">
   (function(spec, embedOpt){
-    const outputDiv = document.getElementById("altair-viz-4cff7d3fe2e34125bb9866e5519c1be9");
+    let outputDiv = document.currentScript.previousElementSibling;
+    if (outputDiv.id !== "altair-viz-ca35df7fe6a14239aab44ed291f457db") {
+      outputDiv = document.getElementById("altair-viz-ca35df7fe6a14239aab44ed291f457db");
+    }
     const paths = {
       "vega": "https://cdn.jsdelivr.net/npm//vega@5?noext",
       "vega-lib": "https://cdn.jsdelivr.net/npm//vega-lib?noext",
-      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.0.2?noext",
+      "vega-lite": "https://cdn.jsdelivr.net/npm//vega-lite@4.8.1?noext",
       "vega-embed": "https://cdn.jsdelivr.net/npm//vega-embed@6?noext",
     };
 
@@ -1231,7 +1340,7 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
         .catch(showError)
         .then(() => displayChart(vegaEmbed));
     }
-  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "altair-data-9626a23229823ccf8aa1fb8154a92332.json", "format": {"type": "json"}}, "facet": {"type": "ordinal", "field": "timestamp", "timeUnit": "year"}, "spec": {"layer": [{"mark": "point", "encoding": {"color": {"type": "quantitative", "field": "load", "scale": {"scheme": "redyellowblue"}, "sort": "descending", "title": "Load (MW)"}, "x": {"type": "temporal", "field": "timestamp", "timeUnit": "monthdate", "title": "Date (hour)"}, "y": {"type": "quantitative", "field": "curtailment_intensity", "title": "Curtailment Intensity (MW/MW)"}}}]}, "$schema": "https://vega.github.io/schema/vega-lite/v4.0.2.json"}, {"mode": "vega-lite"});
+  })({"config": {"view": {"continuousWidth": 400, "continuousHeight": 300}}, "data": {"url": "http://localhost:15533/9626a23229823ccf8aa1fb8154a92332.json"}, "facet": {"type": "ordinal", "field": "timestamp", "timeUnit": "year"}, "spec": {"layer": [{"mark": "point", "encoding": {"color": {"type": "quantitative", "field": "load", "scale": {"scheme": "redyellowblue"}, "sort": "descending", "title": "Load (MW)"}, "x": {"type": "temporal", "field": "timestamp", "timeUnit": "monthdate", "title": "Date (hour)"}, "y": {"type": "quantitative", "field": "curtailment_intensity", "title": "Curtailment Intensity (MW/MW)"}}}]}, "$schema": "https://vega.github.io/schema/vega-lite/v4.8.1.json"}, {"mode": "vega-lite"});
 </script></div>
 </div>
 <p>Total daily curtailment per unit of solar production. A value of 1 represents a day where 50% of solar capacity is curtailed.</p>
@@ -1253,7 +1362,7 @@ daily_curtailment_intensity = alt.layer(base, data=daily_curtailment).facet(&quo
 
     <div class="footer" role="contentinfo">
         &#169; Copyright Thomas Tu, 2020.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>

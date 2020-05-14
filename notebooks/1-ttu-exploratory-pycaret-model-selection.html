@@ -1,0 +1,2311 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>&lt;no title&gt; &#8212; California Renewable Curtailments  documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>California Renewable Curtailments  documentation</span></a></h1>
+        <h2 class="heading"><span>&lt;no title&gt;</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>import sklearn
+import pandas as pd
+import pycaret
+from dask import dataframe as dd
+
+from src.conf import settings
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Read curtailment data, aggregate to dailies.
+df = pd.concat(
+    [
+        pd.read_parquet(settings.DATA_DIR / f&quot;processed/caiso/{y}.parquet&quot;) for y in range(2017,2020)
+    ]
+)
+df.columns = df.columns.str.lower().str.replace(&quot; &quot;, &quot;_&quot;)
+df.index = df.index.tz_convert(&quot;US/Pacific&quot;)
+df = df.groupby(pd.Grouper(freq=&quot;D&quot;)).sum()
+# Hourly resampling is a bad idea because hour-to-hour effects are co-correlated
+# df = df[columns].groupby(pd.Grouper(freq=&quot;H&quot;)).sum()
+df.reset_index(inplace=True)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/home/ttu/.local/share/virtualenvs/CaReCur-b3qbtQ7S/lib/python3.7/site-packages/fastparquet/encoding.py:222: NumbaDeprecationWarning: <span class="ansi-bold">The &#39;numba.jitclass&#39; decorator has moved to &#39;numba.experimental.jitclass&#39; to better reflect the experimental nature of the functionality. Please update your imports to accommodate this change and see http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#change-of-jitclass-location for the time frame.</span>
+  Numpy8 = numba.jitclass(spec8)(NumpyIO)
+/home/ttu/.local/share/virtualenvs/CaReCur-b3qbtQ7S/lib/python3.7/site-packages/fastparquet/encoding.py:224: NumbaDeprecationWarning: <span class="ansi-bold">The &#39;numba.jitclass&#39; decorator has moved to &#39;numba.experimental.jitclass&#39; to better reflect the experimental nature of the functionality. Please update your imports to accommodate this change and see http://numba.pydata.org/numba-doc/latest/reference/deprecation.html#change-of-jitclass-location for the time frame.</span>
+  Numpy32 = numba.jitclass(spec32)(NumpyIO)
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Subset curtailments data to relevant time range
+df = df[df[&quot;timestamp&quot;].dt.month.isin(range(2,6))]
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Analysis Period of Dataset
+df[&quot;timestamp&quot;].describe()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+count                           360
+unique                          360
+top       2019-05-24 00:00:00-07:00
+freq                              1
+first     2017-02-01 00:00:00-08:00
+last      2019-05-31 00:00:00-07:00
+Name: timestamp, dtype: object
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[63]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Label Data - based on our EDA, we might start by &quot;guessing&quot; a threshold of importance of .05
+# Later methods will be less biased, and allow for more variance.
+# TODO: Try to find natural clusterings through an unsupervised process to label the dataset, and try to predict those labels.
+df[&quot;curtailment_event&quot;] = pd.Categorical(df[&quot;solar_curtailment&quot;]/df[&quot;solar&quot;] &gt; .1)
+
+df[&quot;is_weekday&quot;] = pd.Categorical(df[&quot;timestamp&quot;].dt.weekday.isin([5, 6]))
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Merge Weather Data
+# Use Day-Ahead forecasts
+forecasts = [
+    *(settings.DATA_DIR / f&quot;interim/gfs/ca/gfs_3_201[7-9][01][2-5]*_0000_{i*3:03}.parquet&quot; for i in range(5, 10))
+]
+dayahead_weather = dd.read_parquet(forecasts).compute()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>dayahead_weather[&quot;timestamp&quot;] = dayahead_weather[&quot;valid_time&quot;].dt.tz_localize(&quot;UTC&quot;).dt.tz_convert(&quot;US/Pacific&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>dayahead_weather.dtypes
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+latitude                          float64
+longitude                         float64
+t                                 float32
+gust                              float32
+tp                                float32
+dswrf                             float32
+uswrf                             float32
+SUNSD                             float32
+al                                float32
+sp                                float32
+csnow                             float32
+cicep                             float32
+cfrzr                             float32
+crain                             float32
+sde                               float32
+surface                             int64
+time                       datetime64[ns]
+valid_time                 datetime64[ns]
+index_right                         int64
+STATEFP                            object
+COUNTYFP                           object
+COUNTYNS                           object
+GEOID                              object
+NAME                               object
+NAMELSAD                           object
+LSAD                               object
+CLASSFP                            object
+MTFCC                              object
+CSAFP                              object
+CBSAFP                             object
+METDIVFP                           object
+FUNCSTAT                           object
+ALAND                               int64
+AWATER                              int64
+INTPTLAT                           object
+INTPTLON                           object
+timestamp      datetime64[ns, US/Pacific]
+dtype: object
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span># Take an average over all datapoints (no weighting)
+# FIXME: 100 We need to be more thoughtful about how to integrate this data.
+# It should be weighted somehow, or perhaps certain locations are expressed as their own IV.
+# Look into Uitlity CZs
+dayahead_hourly = dayahead_weather.groupby(pd.Grouper(key=&quot;timestamp&quot;, freq=&quot;H&quot;))[[&quot;t&quot;, &quot;dswrf&quot;, &quot;uswrf&quot;, &quot;gust&quot;, &quot;SUNSD&quot;]].mean().interpolate().reset_index()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>dayahead_daily = dayahead_weather.groupby(pd.Grouper(key=&quot;timestamp&quot;, freq=&quot;D&quot;)).agg({&quot;t&quot;: &quot;mean&quot;, &quot;dswrf&quot;: &quot;mean&quot;, &quot;uswrf&quot;: &quot;mean&quot;, &quot;SUNSD&quot;: &quot;sum&quot;})
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[64]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>data = df.merge(dayahead_daily, on=&quot;timestamp&quot;, how=&quot;inner&quot;)
+data
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[64]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>timestamp</th>
+      <th>load</th>
+      <th>solar</th>
+      <th>wind</th>
+      <th>net_load</th>
+      <th>renewables</th>
+      <th>nuclear</th>
+      <th>large_hydro</th>
+      <th>imports</th>
+      <th>generation</th>
+      <th>thermal</th>
+      <th>load_less_(generation+imports)</th>
+      <th>wind_curtailment</th>
+      <th>solar_curtailment</th>
+      <th>curtailment_event</th>
+      <th>is_weekday</th>
+      <th>t</th>
+      <th>dswrf</th>
+      <th>uswrf</th>
+      <th>SUNSD</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2017-02-01 00:00:00-08:00</td>
+      <td>7.404797e+06</td>
+      <td>6.365488e+05</td>
+      <td>8.839707e+04</td>
+      <td>6.679851e+06</td>
+      <td>1.241231e+06</td>
+      <td>652218.031425</td>
+      <td>1.058698e+06</td>
+      <td>2.043459e+06</td>
+      <td>5.361323e+06</td>
+      <td>2.409176e+06</td>
+      <td>14.109963</td>
+      <td>64.670000</td>
+      <td>8480.663464</td>
+      <td>False</td>
+      <td>False</td>
+      <td>282.630219</td>
+      <td>204.382217</td>
+      <td>46.266666</td>
+      <td>2130985.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2017-02-02 00:00:00-08:00</td>
+      <td>7.367050e+06</td>
+      <td>5.002730e+05</td>
+      <td>2.195530e+05</td>
+      <td>6.647224e+06</td>
+      <td>1.235706e+06</td>
+      <td>651180.678103</td>
+      <td>1.077320e+06</td>
+      <td>1.941564e+06</td>
+      <td>5.425467e+06</td>
+      <td>2.461260e+06</td>
+      <td>19.334575</td>
+      <td>2691.564962</td>
+      <td>288.956667</td>
+      <td>False</td>
+      <td>False</td>
+      <td>282.440430</td>
+      <td>155.364441</td>
+      <td>36.537777</td>
+      <td>1721099.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2017-02-03 00:00:00-08:00</td>
+      <td>7.272859e+06</td>
+      <td>5.318559e+05</td>
+      <td>2.889443e+05</td>
+      <td>6.452059e+06</td>
+      <td>1.332687e+06</td>
+      <td>650538.682373</td>
+      <td>1.103827e+06</td>
+      <td>1.913683e+06</td>
+      <td>5.359143e+06</td>
+      <td>2.272091e+06</td>
+      <td>32.670400</td>
+      <td>488.852142</td>
+      <td>869.203799</td>
+      <td>False</td>
+      <td>False</td>
+      <td>283.654236</td>
+      <td>162.995560</td>
+      <td>35.911110</td>
+      <td>1762346.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2017-02-04 00:00:00-08:00</td>
+      <td>6.611103e+06</td>
+      <td>6.363877e+05</td>
+      <td>4.979092e+05</td>
+      <td>5.476806e+06</td>
+      <td>1.657910e+06</td>
+      <td>649935.253088</td>
+      <td>1.102862e+06</td>
+      <td>1.667016e+06</td>
+      <td>4.944096e+06</td>
+      <td>1.533388e+06</td>
+      <td>-9.417728</td>
+      <td>8260.820991</td>
+      <td>69858.576657</td>
+      <td>True</td>
+      <td>True</td>
+      <td>283.166656</td>
+      <td>197.639999</td>
+      <td>42.088890</td>
+      <td>1947685.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2017-02-05 00:00:00-08:00</td>
+      <td>6.661248e+06</td>
+      <td>4.002112e+05</td>
+      <td>2.128107e+05</td>
+      <td>6.048226e+06</td>
+      <td>1.123362e+06</td>
+      <td>649679.457890</td>
+      <td>1.093060e+06</td>
+      <td>2.046784e+06</td>
+      <td>4.614450e+06</td>
+      <td>1.748349e+06</td>
+      <td>12.990172</td>
+      <td>0.000000</td>
+      <td>25.348000</td>
+      <td>False</td>
+      <td>True</td>
+      <td>283.199097</td>
+      <td>174.813339</td>
+      <td>35.973331</td>
+      <td>2019408.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>355</th>
+      <td>2019-05-27 00:00:00-07:00</td>
+      <td>5.672302e+06</td>
+      <td>7.720765e+05</td>
+      <td>1.113156e+06</td>
+      <td>3.787069e+06</td>
+      <td>2.453673e+06</td>
+      <td>656141.389061</td>
+      <td>9.970034e+05</td>
+      <td>1.169736e+06</td>
+      <td>4.502609e+06</td>
+      <td>3.957918e+05</td>
+      <td>-43.080195</td>
+      <td>18796.425323</td>
+      <td>444354.402287</td>
+      <td>True</td>
+      <td>False</td>
+      <td>292.328644</td>
+      <td>457.533325</td>
+      <td>73.480003</td>
+      <td>3091204.0</td>
+    </tr>
+    <tr>
+      <th>356</th>
+      <td>2019-05-28 00:00:00-07:00</td>
+      <td>6.436942e+06</td>
+      <td>1.194693e+06</td>
+      <td>9.471656e+05</td>
+      <td>4.295084e+06</td>
+      <td>2.701523e+06</td>
+      <td>656950.514763</td>
+      <td>1.010069e+06</td>
+      <td>1.417568e+06</td>
+      <td>5.019443e+06</td>
+      <td>6.509010e+05</td>
+      <td>-69.383111</td>
+      <td>924.968950</td>
+      <td>63554.570744</td>
+      <td>False</td>
+      <td>False</td>
+      <td>296.436951</td>
+      <td>507.760010</td>
+      <td>74.080002</td>
+      <td>3122509.0</td>
+    </tr>
+    <tr>
+      <th>357</th>
+      <td>2019-05-29 00:00:00-07:00</td>
+      <td>6.762152e+06</td>
+      <td>1.239861e+06</td>
+      <td>5.052720e+05</td>
+      <td>5.017019e+06</td>
+      <td>2.309672e+06</td>
+      <td>657307.503346</td>
+      <td>1.089729e+06</td>
+      <td>1.752092e+06</td>
+      <td>5.010103e+06</td>
+      <td>9.533939e+05</td>
+      <td>-42.688343</td>
+      <td>10658.002569</td>
+      <td>72766.329577</td>
+      <td>False</td>
+      <td>False</td>
+      <td>299.156006</td>
+      <td>511.271118</td>
+      <td>73.702225</td>
+      <td>3112164.0</td>
+    </tr>
+    <tr>
+      <th>358</th>
+      <td>2019-05-30 00:00:00-07:00</td>
+      <td>6.865228e+06</td>
+      <td>1.295425e+06</td>
+      <td>5.069673e+05</td>
+      <td>5.062835e+06</td>
+      <td>2.359094e+06</td>
+      <td>657488.225968</td>
+      <td>1.192374e+06</td>
+      <td>1.771105e+06</td>
+      <td>5.094174e+06</td>
+      <td>8.852177e+05</td>
+      <td>-50.745769</td>
+      <td>13743.059075</td>
+      <td>7661.455448</td>
+      <td>False</td>
+      <td>False</td>
+      <td>299.053741</td>
+      <td>506.617767</td>
+      <td>73.831108</td>
+      <td>3118246.0</td>
+    </tr>
+    <tr>
+      <th>359</th>
+      <td>2019-05-31 00:00:00-07:00</td>
+      <td>6.929919e+06</td>
+      <td>1.244073e+06</td>
+      <td>4.013874e+05</td>
+      <td>5.284459e+06</td>
+      <td>2.219221e+06</td>
+      <td>657313.148060</td>
+      <td>1.212114e+06</td>
+      <td>1.889459e+06</td>
+      <td>5.040392e+06</td>
+      <td>9.517434e+05</td>
+      <td>67.953527</td>
+      <td>909.440812</td>
+      <td>48430.745252</td>
+      <td>False</td>
+      <td>False</td>
+      <td>298.764374</td>
+      <td>538.822205</td>
+      <td>76.894447</td>
+      <td>2290201.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>360 rows × 20 columns</p>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[183]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from pycaret.classification import setup, compare_models, create_model, plot_model, tune_model, ensemble_model
+
+data = data.dropna(subset=[&quot;t&quot;, &quot;dswrf&quot;])
+
+cols = [&quot;curtailment_event&quot;, &quot;is_weekday&quot;, &quot;month&quot;, &quot;year&quot;, &quot;t&quot;, &quot;dswrf&quot;, &quot;load&quot;]
+
+data[&quot;month&quot;] = data[&quot;timestamp&quot;].dt.month
+data[&quot;year&quot;] = data[&quot;timestamp&quot;].dt.year
+
+training_data=data[cols].sample(frac=.9, random_state=123)
+training_data[&quot;curtailment_event&quot;] = training_data[&quot;curtailment_event&quot;].astype(int)
+training_data[&quot;is_weekday&quot;] = training_data[&quot;is_weekday&quot;].astype(int)
+
+test_data = data[cols].drop(training_data.index)
+test_data[&quot;curtailment_event&quot;] = training_data[&quot;curtailment_event&quot;].astype(int)
+test_data[&quot;is_weekday&quot;] = training_data[&quot;is_weekday&quot;].astype(int)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[184]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>training_data.head()
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[184]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>curtailment_event</th>
+      <th>is_weekday</th>
+      <th>month</th>
+      <th>year</th>
+      <th>t</th>
+      <th>dswrf</th>
+      <th>load</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>351</th>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>2019</td>
+      <td>292.234558</td>
+      <td>414.799988</td>
+      <td>6.704121e+06</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2017</td>
+      <td>294.338654</td>
+      <td>483.320007</td>
+      <td>7.169724e+06</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2017</td>
+      <td>279.945343</td>
+      <td>291.502228</td>
+      <td>6.521603e+06</td>
+    </tr>
+    <tr>
+      <th>352</th>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>2019</td>
+      <td>296.377899</td>
+      <td>501.662231</td>
+      <td>6.452064e+06</td>
+    </tr>
+    <tr>
+      <th>252</th>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2019</td>
+      <td>280.735413</td>
+      <td>73.324448</td>
+      <td>7.241269e+06</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[186]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>experiment = setup(data=training_data.reset_index(drop=True),
+                   train_size=.8, target=&quot;curtailment_event&quot;, session_id=123, numeric_features=[&quot;t&quot;, &quot;dswrf&quot;, &quot;load&quot;])
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+
+Setup Succesfully Completed!
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<style  type="text/css" >
+</style><table id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >Description</th>        <th class="col_heading level0 col1" >Value</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row0" class="row_heading level0 row0" >0</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row0_col0" class="data row0 col0" >session_id</td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row0_col1" class="data row0 col1" >123</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row1" class="row_heading level0 row1" >1</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row1_col0" class="data row1 col0" >Target Type</td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row1_col1" class="data row1 col1" >Binary</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row2" class="row_heading level0 row2" >2</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row2_col0" class="data row2 col0" >Label Encoded</td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row2_col1" class="data row2 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row3" class="row_heading level0 row3" >3</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row3_col0" class="data row3 col0" >Original Data</td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row3_col1" class="data row3 col1" >(319, 7)</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row4" class="row_heading level0 row4" >4</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row4_col0" class="data row4 col0" >Missing Values </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row4_col1" class="data row4 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row5" class="row_heading level0 row5" >5</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row5_col0" class="data row5 col0" >Numeric Features </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row5_col1" class="data row5 col1" >3</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row6" class="row_heading level0 row6" >6</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row6_col0" class="data row6 col0" >Categorical Features </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row6_col1" class="data row6 col1" >2</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row7" class="row_heading level0 row7" >7</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row7_col0" class="data row7 col0" >Ordinal Features </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row7_col1" class="data row7 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row8" class="row_heading level0 row8" >8</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row8_col0" class="data row8 col0" >High Cardinality Features </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row8_col1" class="data row8 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row9" class="row_heading level0 row9" >9</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row9_col0" class="data row9 col0" >High Cardinality Method </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row9_col1" class="data row9 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row10" class="row_heading level0 row10" >10</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row10_col0" class="data row10 col0" >Sampled Data</td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row10_col1" class="data row10 col1" >(319, 7)</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row11" class="row_heading level0 row11" >11</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row11_col0" class="data row11 col0" >Transformed Train Set</td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row11_col1" class="data row11 col1" >(255, 14)</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row12" class="row_heading level0 row12" >12</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row12_col0" class="data row12 col0" >Transformed Test Set</td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row12_col1" class="data row12 col1" >(64, 14)</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row13" class="row_heading level0 row13" >13</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row13_col0" class="data row13 col0" >Numeric Imputer </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row13_col1" class="data row13 col1" >mean</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row14" class="row_heading level0 row14" >14</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row14_col0" class="data row14 col0" >Categorical Imputer </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row14_col1" class="data row14 col1" >constant</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row15" class="row_heading level0 row15" >15</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row15_col0" class="data row15 col0" >Normalize </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row15_col1" class="data row15 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row16" class="row_heading level0 row16" >16</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row16_col0" class="data row16 col0" >Normalize Method </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row16_col1" class="data row16 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row17" class="row_heading level0 row17" >17</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row17_col0" class="data row17 col0" >Transformation </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row17_col1" class="data row17 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row18" class="row_heading level0 row18" >18</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row18_col0" class="data row18 col0" >Transformation Method </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row18_col1" class="data row18 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row19" class="row_heading level0 row19" >19</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row19_col0" class="data row19 col0" >PCA </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row19_col1" class="data row19 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row20" class="row_heading level0 row20" >20</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row20_col0" class="data row20 col0" >PCA Method </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row20_col1" class="data row20 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row21" class="row_heading level0 row21" >21</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row21_col0" class="data row21 col0" >PCA Components </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row21_col1" class="data row21 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row22" class="row_heading level0 row22" >22</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row22_col0" class="data row22 col0" >Ignore Low Variance </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row22_col1" class="data row22 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row23" class="row_heading level0 row23" >23</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row23_col0" class="data row23 col0" >Combine Rare Levels </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row23_col1" class="data row23 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row24" class="row_heading level0 row24" >24</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row24_col0" class="data row24 col0" >Rare Level Threshold </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row24_col1" class="data row24 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row25" class="row_heading level0 row25" >25</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row25_col0" class="data row25 col0" >Numeric Binning </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row25_col1" class="data row25 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row26" class="row_heading level0 row26" >26</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row26_col0" class="data row26 col0" >Remove Outliers </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row26_col1" class="data row26 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row27" class="row_heading level0 row27" >27</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row27_col0" class="data row27 col0" >Outliers Threshold </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row27_col1" class="data row27 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row28" class="row_heading level0 row28" >28</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row28_col0" class="data row28 col0" >Remove Multicollinearity </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row28_col1" class="data row28 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row29" class="row_heading level0 row29" >29</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row29_col0" class="data row29 col0" >Multicollinearity Threshold </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row29_col1" class="data row29 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row30" class="row_heading level0 row30" >30</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row30_col0" class="data row30 col0" >Clustering </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row30_col1" class="data row30 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row31" class="row_heading level0 row31" >31</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row31_col0" class="data row31 col0" >Clustering Iteration </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row31_col1" class="data row31 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row32" class="row_heading level0 row32" >32</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row32_col0" class="data row32 col0" >Polynomial Features </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row32_col1" class="data row32 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row33" class="row_heading level0 row33" >33</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row33_col0" class="data row33 col0" >Polynomial Degree </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row33_col1" class="data row33 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row34" class="row_heading level0 row34" >34</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row34_col0" class="data row34 col0" >Trignometry Features </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row34_col1" class="data row34 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row35" class="row_heading level0 row35" >35</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row35_col0" class="data row35 col0" >Polynomial Threshold </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row35_col1" class="data row35 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row36" class="row_heading level0 row36" >36</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row36_col0" class="data row36 col0" >Group Features </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row36_col1" class="data row36 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row37" class="row_heading level0 row37" >37</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row37_col0" class="data row37 col0" >Feature Selection </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row37_col1" class="data row37 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row38" class="row_heading level0 row38" >38</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row38_col0" class="data row38 col0" >Features Selection Threshold </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row38_col1" class="data row38 col1" >None</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row39" class="row_heading level0 row39" >39</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row39_col0" class="data row39 col0" >Feature Interaction </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row39_col1" class="data row39 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row40" class="row_heading level0 row40" >40</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row40_col0" class="data row40 col0" >Feature Ratio </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row40_col1" class="data row40 col1" >False</td>
+            </tr>
+            <tr>
+                        <th id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1level0_row41" class="row_heading level0 row41" >41</th>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row41_col0" class="data row41 col0" >Interaction Threshold </td>
+                        <td id="T_25d2baf4_859b_11ea_b9ef_9dcba678c5e1row41_col1" class="data row41 col1" >None</td>
+            </tr>
+    </tbody></table></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[187]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>compare_models(fold=9, turbo=False)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[187]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<style  type="text/css" >
+    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1 th {
+          text-align: left;
+    }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col1 {
+            background-color:  yellow;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col2 {
+            background-color:  yellow;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col4 {
+            background-color:  yellow;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col3 {
+            background-color:  yellow;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col5 {
+            background-color:  yellow;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col6 {
+            background-color:  yellow;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col6 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col0 {
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col1 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col2 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col3 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col4 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col5 {
+            : ;
+            text-align:  left;
+        }    #T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col6 {
+            : ;
+            text-align:  left;
+        }</style><table id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1" ><thead>    <tr>        <th class="blank level0" ></th>        <th class="col_heading level0 col0" >Model</th>        <th class="col_heading level0 col1" >Accuracy</th>        <th class="col_heading level0 col2" >AUC</th>        <th class="col_heading level0 col3" >Recall</th>        <th class="col_heading level0 col4" >Prec.</th>        <th class="col_heading level0 col5" >F1</th>        <th class="col_heading level0 col6" >Kappa</th>    </tr></thead><tbody>
+                <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row0" class="row_heading level0 row0" >0</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col0" class="data row0 col0" >Naive Bayes</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col1" class="data row0 col1" >0.902200</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col2" class="data row0 col2" >0.788700</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col3" class="data row0 col3" >0.222200</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col4" class="data row0 col4" >0.444400</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col5" class="data row0 col5" >0.288900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row0_col6" class="data row0 col6" >0.262100</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row1" class="row_heading level0 row1" >1</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col0" class="data row1 col0" >K Neighbors Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col1" class="data row1 col1" >0.894100</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col2" class="data row1 col2" >0.619400</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col3" class="data row1 col3" >0.185200</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col4" class="data row1 col4" >0.314800</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col5" class="data row1 col5" >0.225900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row1_col6" class="data row1 col6" >0.199400</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row2" class="row_heading level0 row2" >2</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col0" class="data row2 col0" >Logistic Regression</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col1" class="data row2 col1" >0.890300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col2" class="data row2 col2" >0.822800</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col3" class="data row2 col3" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col4" class="data row2 col4" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col5" class="data row2 col5" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row2_col6" class="data row2 col6" >0.000000</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row3" class="row_heading level0 row3" >3</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col0" class="data row3 col0" >SVM - Linear Kernel</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col1" class="data row3 col1" >0.890300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col2" class="data row3 col2" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col3" class="data row3 col3" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col4" class="data row3 col4" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col5" class="data row3 col5" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row3_col6" class="data row3 col6" >0.000000</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row4" class="row_heading level0 row4" >4</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col0" class="data row4 col0" >SVM - Radial Kernel</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col1" class="data row4 col1" >0.890300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col2" class="data row4 col2" >0.500000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col3" class="data row4 col3" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col4" class="data row4 col4" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col5" class="data row4 col5" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row4_col6" class="data row4 col6" >0.000000</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row5" class="row_heading level0 row5" >5</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col0" class="data row5 col0" >Ridge Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col1" class="data row5 col1" >0.890300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col2" class="data row5 col2" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col3" class="data row5 col3" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col4" class="data row5 col4" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col5" class="data row5 col5" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row5_col6" class="data row5 col6" >0.000000</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row6" class="row_heading level0 row6" >6</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col0" class="data row6 col0" >Quadratic Discriminant Analysis</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col1" class="data row6 col1" >0.890300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col2" class="data row6 col2" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col3" class="data row6 col3" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col4" class="data row6 col4" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col5" class="data row6 col5" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row6_col6" class="data row6 col6" >0.000000</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row7" class="row_heading level0 row7" >7</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col0" class="data row7 col0" >Linear Discriminant Analysis</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col1" class="data row7 col1" >0.890100</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col2" class="data row7 col2" >0.814600</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col3" class="data row7 col3" >0.259300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col4" class="data row7 col4" >0.407400</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col5" class="data row7 col5" >0.307400</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row7_col6" class="data row7 col6" >0.266000</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row8" class="row_heading level0 row8" >8</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col0" class="data row8 col0" >Random Forest Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col1" class="data row8 col1" >0.886400</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col2" class="data row8 col2" >0.788300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col3" class="data row8 col3" >0.148100</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col4" class="data row8 col4" >0.333300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col5" class="data row8 col5" >0.200000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row8_col6" class="data row8 col6" >0.165000</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row9" class="row_heading level0 row9" >9</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col0" class="data row9 col0" >Gaussian Process Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col1" class="data row9 col1" >0.886300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col2" class="data row9 col2" >0.500000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col3" class="data row9 col3" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col4" class="data row9 col4" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col5" class="data row9 col5" >0.000000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row9_col6" class="data row9 col6" >-0.006300</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row10" class="row_heading level0 row10" >10</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col0" class="data row10 col0" >Extreme Gradient Boosting</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col1" class="data row10 col1" >0.878500</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col2" class="data row10 col2" >0.779300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col3" class="data row10 col3" >0.213000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col4" class="data row10 col4" >0.314800</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col5" class="data row10 col5" >0.251900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row10_col6" class="data row10 col6" >0.198300</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row11" class="row_heading level0 row11" >11</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col0" class="data row11 col0" >Extra Trees Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col1" class="data row11 col1" >0.870400</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col2" class="data row11 col2" >0.755800</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col3" class="data row11 col3" >0.250000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col4" class="data row11 col4" >0.453700</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col5" class="data row11 col5" >0.305800</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row11_col6" class="data row11 col6" >0.244500</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row12" class="row_heading level0 row12" >12</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col0" class="data row12 col0" >CatBoost Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col1" class="data row12 col1" >0.866700</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col2" class="data row12 col2" >0.797900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col3" class="data row12 col3" >0.222200</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col4" class="data row12 col4" >0.231500</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col5" class="data row12 col5" >0.224300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row12_col6" class="data row12 col6" >0.166200</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row13" class="row_heading level0 row13" >13</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col0" class="data row13 col0" >Gradient Boosting Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col1" class="data row13 col1" >0.862900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col2" class="data row13 col2" >0.771900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col3" class="data row13 col3" >0.250000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col4" class="data row13 col4" >0.277800</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col5" class="data row13 col5" >0.252900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row13_col6" class="data row13 col6" >0.191500</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row14" class="row_heading level0 row14" >14</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col0" class="data row14 col0" >Ada Boost Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col1" class="data row14 col1" >0.862300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col2" class="data row14 col2" >0.763300</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col3" class="data row14 col3" >0.351900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col4" class="data row14 col4" >0.357400</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col5" class="data row14 col5" >0.339700</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row14_col6" class="data row14 col6" >0.267100</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row15" class="row_heading level0 row15" >15</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col0" class="data row15 col0" >Light Gradient Boosting Machine</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col1" class="data row15 col1" >0.862200</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col2" class="data row15 col2" >0.756500</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col3" class="data row15 col3" >0.175900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col4" class="data row15 col4" >0.361100</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col5" class="data row15 col5" >0.220600</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row15_col6" class="data row15 col6" >0.154000</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row16" class="row_heading level0 row16" >16</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col0" class="data row16 col0" >Decision Tree Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col1" class="data row16 col1" >0.811600</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col2" class="data row16 col2" >0.581800</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col3" class="data row16 col3" >0.287000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col4" class="data row16 col4" >0.222200</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col5" class="data row16 col5" >0.223500</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row16_col6" class="data row16 col6" >0.128400</td>
+            </tr>
+            <tr>
+                        <th id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1level0_row17" class="row_heading level0 row17" >17</th>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col0" class="data row17 col0" >MLP Classifier</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col1" class="data row17 col1" >0.803000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col2" class="data row17 col2" >0.500000</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col3" class="data row17 col3" >0.111100</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col4" class="data row17 col4" >0.011900</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col5" class="data row17 col5" >0.021500</td>
+                        <td id="T_338dc40e_859b_11ea_b9ef_9dcba678c5e1row17_col6" class="data row17 col6" >0.000000</td>
+            </tr>
+    </tbody></table></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[188]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>lr = create_model(&quot;lr&quot;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Accuracy</th>
+      <th>AUC</th>
+      <th>Recall</th>
+      <th>Prec.</th>
+      <th>F1</th>
+      <th>Kappa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.8846</td>
+      <td>0.8116</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.8846</td>
+      <td>0.8841</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.8846</td>
+      <td>0.8986</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.8846</td>
+      <td>0.8696</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.8846</td>
+      <td>0.7826</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.9200</td>
+      <td>0.9565</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.9200</td>
+      <td>0.6739</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.8800</td>
+      <td>0.6061</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.8800</td>
+      <td>0.9394</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.8800</td>
+      <td>0.7424</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Mean</th>
+      <td>0.8903</td>
+      <td>0.8165</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>SD</th>
+      <td>0.0150</td>
+      <td>0.1096</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[189]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>lr_bagged = ensemble_model(lr)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Accuracy</th>
+      <th>AUC</th>
+      <th>Recall</th>
+      <th>Prec.</th>
+      <th>F1</th>
+      <th>Kappa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.8846</td>
+      <td>0.7971</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.8846</td>
+      <td>0.8841</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.8846</td>
+      <td>0.8986</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.8846</td>
+      <td>0.8696</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.8846</td>
+      <td>0.6957</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.9200</td>
+      <td>0.9565</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.9200</td>
+      <td>0.6957</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.8800</td>
+      <td>0.6061</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.8800</td>
+      <td>0.9394</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.8800</td>
+      <td>0.7424</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Mean</th>
+      <td>0.8903</td>
+      <td>0.8085</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>SD</th>
+      <td>0.0150</td>
+      <td>0.1129</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[177]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>print(lr_bagged)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+BaggingClassifier(base_estimator=LogisticRegression(C=1.0, class_weight=None,
+                                                    dual=False,
+                                                    fit_intercept=True,
+                                                    intercept_scaling=1,
+                                                    l1_ratio=None, max_iter=100,
+                                                    multi_class=&#39;auto&#39;,
+                                                    n_jobs=None, penalty=&#39;l2&#39;,
+                                                    random_state=123,
+                                                    solver=&#39;lbfgs&#39;, tol=0.0001,
+                                                    verbose=0,
+                                                    warm_start=False),
+                  bootstrap=True, bootstrap_features=False, max_features=1.0,
+                  max_samples=1.0, n_estimators=10, n_jobs=None,
+                  oob_score=False, random_state=123, verbose=0,
+                  warm_start=False)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[190]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>tuned_lr = tune_model(&#39;lr&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Accuracy</th>
+      <th>AUC</th>
+      <th>Recall</th>
+      <th>Prec.</th>
+      <th>F1</th>
+      <th>Kappa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.8846</td>
+      <td>0.8116</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.8846</td>
+      <td>0.8841</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.8846</td>
+      <td>0.8986</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.8846</td>
+      <td>0.8696</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.8846</td>
+      <td>0.7826</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.9200</td>
+      <td>0.9565</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.9200</td>
+      <td>0.6739</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.8800</td>
+      <td>0.6061</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.8800</td>
+      <td>0.9394</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.8800</td>
+      <td>0.7424</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Mean</th>
+      <td>0.8903</td>
+      <td>0.8165</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>SD</th>
+      <td>0.0150</td>
+      <td>0.1096</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[191]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>plot_model(lr_bagged, plot = &#39;auc&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="notebooks/../_build/doctrees/nbsphinx/notebooks_1-ttu-exploratory-pycaret-model-selection_19_0.png" src="notebooks/../_build/doctrees/nbsphinx/notebooks_1-ttu-exploratory-pycaret-model-selection_19_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[192]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>plot_model(lr_bagged, plot = &#39;pr&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="notebooks/../_build/doctrees/nbsphinx/notebooks_1-ttu-exploratory-pycaret-model-selection_20_0.png" src="notebooks/../_build/doctrees/nbsphinx/notebooks_1-ttu-exploratory-pycaret-model-selection_20_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[193]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>plot_model(lr_bagged, plot = &#39;confusion_matrix&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="notebooks/../_build/doctrees/nbsphinx/notebooks_1-ttu-exploratory-pycaret-model-selection_21_0.png" src="notebooks/../_build/doctrees/nbsphinx/notebooks_1-ttu-exploratory-pycaret-model-selection_21_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[194]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from pycaret.classification import predict_model
+
+predictions = predict_model(lr_bagged)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Model</th>
+      <th>Accuracy</th>
+      <th>AUC</th>
+      <th>Recall</th>
+      <th>Prec.</th>
+      <th>F1</th>
+      <th>Kappa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Bagging Classifier</td>
+      <td>0.8906</td>
+      <td>0.9398</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright Thomas Tu, 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>

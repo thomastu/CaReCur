@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -53,6 +53,15 @@ Primarily, we are motivated by the following questions:</p>
 <div class="section" id="background">
 <h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
 <p>As intermittent sources of generation continue to grow, overcapacity may result in events where generation may exceed available demand.  Balancing authorities must decide how to ramp down total generation to keep the grid in balance.  Currently the CAISO approaches oversupply primarly through economic curtailment <a class="bibtex reference internal" href="zreferences.html#californiaiso2017" id="id1">[CAI17b]</a>.  Other approaches to managing supply include expanded energy storage, demand response programs, <a class="reference internal" href="glossary.html#term-tou"><span class="xref std std-term">TOU</span></a> rates, reductions in minimum generation, expanding the western <a class="reference internal" href="glossary.html#term-eim"><span class="xref std std-term">EIM</span></a>, increasing flexible capacity, integrating more EVs and improving regional coordination <a class="bibtex reference internal" href="zreferences.html#californiaiso2017a" id="id2">[CAI17a]</a>.  The goal of this study is to better inform and understand exogenous variables that contribute to oversupply.</p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Flesh out a few additional motivations:</p>
+<ul class="simple">
+<li><p>Growth of installed solar capacity from 2015+ vs mean electricity demand over analysis months (Feb to May)</p></li>
+<li><p>Use cases for curtailed energy such as dispatching short-term DR
+- Sample plots showing potential for system benefits using even a low-probability model.</p></li>
+</ul>
+</div>
 </div>
 </div>
 
@@ -72,7 +81,7 @@ Primarily, we are motivated by the following questions:</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright Thomas Tu, 2020.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
     </div>
   </body>
 </html>
