@@ -1,0 +1,9 @@
+md5: e2e22b0fe5a84c65dcdbf53a5c446738
+cmd: python src/data/cec/ca_powerplants.py
+wdir: ../../..
+outs:
+- md5: d459ae28339e40fb46952be1f5b7392f
+  path: data/raw/geography/powerplants.geojson
+  cache: true
+  metric: false
+  persist: false
