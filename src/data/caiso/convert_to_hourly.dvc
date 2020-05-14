@@ -1,11 +1,11 @@
-md5: 9414fe44e60a224a63068123f7b167c8
+md5: b7bb03957d7ec7afcc5ba0675fa0e2bf
 cmd: python src/data/caiso/convert_to_hourly.py
 wdir: ../../..
 deps:
-- md5: a8de7afb72ac5f5a0128ac19c7b48d02.dir
+- md5: 67c44aeb7a145d1b53ff0ef7fb609966.dir
   path: data/processed/caiso
 outs:
-- md5: bdbddba13f08dc359eaffe1fe2e72775.dir
+- md5: db77bce9626581c0bc73961564be3949.dir
   path: data/processed/caiso_hourly
   cache: true
   metric: false

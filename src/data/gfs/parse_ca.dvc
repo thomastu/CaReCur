@@ -1,12 +1,12 @@
-md5: e44a6ec8ec7baf91f228e703fd2ec78e
+md5: 50380acd57dc741cdd85037663248e29
 wdir: ../../..
 deps:
-- md5: 79099058efe1502cae02008a3f3d03a6.dir
+- md5: 332e1928aba8805ac621ef6d5509bfd8.dir
   path: gs://carecur-gfs-data/grid3
-- md5: 3c2ae1539057783f74a64ff30b7912b2
+- md5: c60e93f08c30f6ec5336bc8e4a12d975
   path: src/data/gfs/adhoc/parse_orders.py
 outs:
-- md5: 6e0e10c0bcc29c493c87469f6fc81e87.dir
+- md5: eb7aeedab76af6e601c0327fa98fb181.dir
   path: data/interim/gfs/ca
   cache: true
   metric: false

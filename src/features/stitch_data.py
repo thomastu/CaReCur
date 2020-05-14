@@ -171,6 +171,8 @@ if __name__ == "__main__":
 
     # Note that this is still on the original df grain as we did not aggregate the groupby!
     dayahead_weather = pd.concat(results, ignore_index=True)
+
+    # Roll-up to dailies
     daily_capacity = (
         dayahead_weather.groupby(by=["GEOID", pd.Grouper(key="timestamp", freq="D")])[
             "capacity_mw"
@@ -204,41 +206,45 @@ if __name__ == "__main__":
                     s, weights=dayahead_weather.loc[s.index, "capacity_mw"]
                 ),
             ),
+            capacity_weighted_dswrf=pd.NamedAgg(
+                column="dswrf",
+                aggfunc=lambda s: 0.0
+                if s.empty
+                else np.average(
+                    s, weights=dayahead_weather.loc[s.index, "capacity_mw"]
+                ),
+            ),
         )
         .dropna(subset=["mean_temperature",], how="any")
     )
 
     dayahead_daily["installed_capacity"] = dayahead_daily.index.map(daily_capacity)
 
-    feature_data = df.merge(dayahead_daily, on="timestamp", how="inner")
+    daily_feature_data = df.merge(dayahead_daily, on="timestamp", how="inner")
 
-    feature_data["solar_capacity_factor"] = feature_data["solar"] / (
-        feature_data["installed_capacity"] * 24
+    daily_feature_data["solar_capacity_factor"] = daily_feature_data["solar"] / (
+        daily_feature_data["installed_capacity"] * 24
     )
-    # timestamp                         datetime64[ns, US/Pacific]
-    # load                                                 float64
-    # solar                                                float64
-    # wind                                                 float64
-    # net_load                                             float64
-    # renewables                                           float64
-    # nuclear                                              float64
-    # large_hydro                                          float64
-    # imports                                              float64
-    # generation                                           float64
-    # thermal                                              float64
-    # load_less_(generation+imports)                       float64
-    # wind_curtailment                                     float64
-    # solar_curtailment                                    float64
-    # is_weekday                                              bool
-    # mean_temperature                                     float32
-    # downward_shortwave_radiation                         float32
-    # upward_shortwave_radation                            float32
-    # sunshine_duration                                    float32
-    # dswrf_weighted_temperature                           float32
-    # capacity_weighted_temperature                        float32
-    # installed_capacity                                   float64
-    # solar_capacity_factor                                float64
+    # timestamp                        datetime64[ns, US/Pacific]
+    # solar_curtailment                                   float64
+    # solar                                               float64
+    # net_load                                            float64
+    # load                                                float64
+    # generation                                          float64
+    # renewables                                          float64
+    # wind_curtailment                                    float64
+    # is_weekday                                             bool
+    # mean_temperature                                    float32
+    # downward_shortwave_radiation                        float32
+    # upward_shortwave_radation                           float32
+    # sunshine_duration                                   float32
+    # dswrf_weighted_temperature                          float32
+    # capacity_weighted_temperature                       float32
+    # installed_capacity                                  float64
+    # solar_capacity_factor                               float64
+    # dtype: object
 
-    feature_data.to_parquet(
-        TRAINING_DIR / "0_labeled_data.parquet", engine="fastparquet"
+
+    daily_feature_data.to_parquet(
+        TRAINING_DIR / "0_labeled_data_daily.parquet", engine="fastparquet"
     )

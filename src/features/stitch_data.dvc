@@ -1,4 +1,4 @@
-md5: 5fd94f73f8feaf3a616e0b0f6a954d73
+md5: 7523295ec178ee2dccdc367615180420
 cmd: python src/features/stitch_data.py
 wdir: ../..
 deps:
@@ -6,11 +6,13 @@ deps:
   path: data/processed/geography/powerplants.parquet
 - md5: 650a684e924ad212dd95e40aedafc923.dir
   path: data/processed/geography/CA_Counties
-- md5: bdbddba13f08dc359eaffe1fe2e72775.dir
+- md5: eb7aeedab76af6e601c0327fa98fb181.dir
+  path: data/interim/gfs/ca
+- md5: db77bce9626581c0bc73961564be3949.dir
   path: data/processed/caiso_hourly
 outs:
-- md5: 9e5a368f21e3044f430b15591a4d857a
-  path: data/processed/training/0_labeled_data.parquet
+- md5: e9dfa15e48e9f4e2198d7fd7a068b608
+  path: data/processed/training/0_labeled_data_daily.parquet
   cache: true
   metric: false
   persist: false
