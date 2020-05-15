@@ -39,12 +39,12 @@ SURFACE_VARS = (
     "uswrf",  # Upward Short-Wave Radiation
     "SUNSD",  # Sunshine duration
     "al",  # Albedo
-    "sp", # Surface pressure
-    "csnow", # Categorical: Snow
-    "cicep", # Categorical: Ice pellets
-    "cfrzr", # Categorical: Freezing rain
-    "crain", # Categorical: Rain
-    "sde", # Snow Depth
+    "sp",  # Surface pressure
+    "csnow",  # Categorical: Snow
+    "cicep",  # Categorical: Ice pellets
+    "cfrzr",  # Categorical: Freezing rain
+    "crain",  # Categorical: Rain
+    "sde",  # Snow Depth
 )
 
 
@@ -56,9 +56,7 @@ def parse_gribfile(fp: str):
         ds = xr.open_dataset(fp, backend_kwargs=GRB2_SURFACE_FILTER, engine="cfgrib")
         ds = ds.drop_vars("step")
     except KeyError:
-        logger.warning(
-            "GRB2 file {fp} does not contain 'surface' data.", fp=fp
-        )
+        logger.warning("GRB2 file {fp} does not contain 'surface' data.", fp=fp)
     data_vars = list(filter(lambda data_var: data_var in ds.data_vars, SURFACE_VARS))
     # Only retain variables of interest
     ds = ds[data_vars]
@@ -76,12 +74,7 @@ def parse_data(gfs_grb2_df: pd.DataFrame, envelope_gdf: gpd.GeoDataFrame):
     assert (~envelope_gdf.geom_type.isin(POLY_TYPES)).sum() == 0
 
     gdf = grb2gdf(df)
-    gdf = gpd.tools.sjoin(
-        gdf,
-        envelope_gdf.to_crs(GRB2_CRS),
-        op="within",
-        how="inner"
-    )
+    gdf = gpd.tools.sjoin(gdf, envelope_gdf.to_crs(GRB2_CRS), op="within", how="inner")
     return gdf
 
 
@@ -99,7 +92,7 @@ def parse_gfs_archive(gfs_archive, forecasts=[]):
             if forecast not in forecasts:
                 continue
 
-            fp = (Path(tmpdir)/tarinfo.name).absolute()
+            fp = (Path(tmpdir) / tarinfo.name).absolute()
 
             # Extract member from tar archive
             tf.extract(tarinfo, path=tmpdir)
@@ -133,7 +126,7 @@ def parse_archive(gfs_archive, envelope, forecasts=[]):
     Args:
         gfs_archive (google.cloud.storage.blob.Blob): Storage blob object.
     """
-    
+
     fd, fp_ = tempfile.mkstemp()
 
     # Download file from storage
@@ -144,7 +137,7 @@ def parse_archive(gfs_archive, envelope, forecasts=[]):
         for gdf, fn in parse_gfs_archive(fp_, forecasts=forecasts):
             fn = Path(fn).stem
             gdf = parse_data(gdf, envelope)
-            gdf.drop(columns="geometry").to_parquet(OUTPUT_DIR/f"{fn}.parquet")
+            gdf.drop(columns="geometry").to_parquet(OUTPUT_DIR / f"{fn}.parquet")
     except Exception as e:
         logger.exception(e)
 
@@ -153,10 +146,18 @@ def parse_archive(gfs_archive, envelope, forecasts=[]):
 
 
 @click.command()
-@click.argument("project", type=str, )
-@click.option("-y", "--year", "year", type=int, required=True, help="Forecast year to parse")
-@click.option("-m", "--month", "month", type=int, required=True, help="Forecast year to parse")
-@click.option("-d", "--day", "day", type=int, required=False, help="Forecast day to parse.")
+@click.argument(
+    "project", type=str,
+)
+@click.option(
+    "-y", "--year", "year", type=int, required=True, help="Forecast year to parse"
+)
+@click.option(
+    "-m", "--month", "month", type=int, required=True, help="Forecast year to parse"
+)
+@click.option(
+    "-d", "--day", "day", type=int, required=False, help="Forecast day to parse."
+)
 def main(project, year, month, day=None):
     """Parse through gfs grid-3 archive data for a single year and month.
 
@@ -164,14 +165,16 @@ def main(project, year, month, day=None):
 
         project:  Google cloud project to bill data access to.
     """
-    envelope = gpd.read_file(settings.DATA_DIR / "processed/geography/CA_Counties/CA_Counties_TIGER2016.shp")
+    envelope = gpd.read_file(
+        settings.DATA_DIR / "processed/geography/CA_Counties/CA_Counties_TIGER2016.shp"
+    )
     # Parse out months as well!
 
     # Archive data only exist in this bucket for 2017 to 2019
     assert year in range(2017, 2020)
     assert month in range(1, 13)
 
-    prefix=f"grid3/gfs_3_{year}{month:02}"
+    prefix = f"grid3/gfs_3_{year}{month:02}"
     if day:
         prefix = f"{prefix}{day:02}"
 
@@ -180,12 +183,10 @@ def main(project, year, month, day=None):
     forecasts = [
         # Day of
         *(f"{i*3:03}" for i in range(5, 10)),
-
         # 24-hour
         *(f"{i*3:03}" for i in range(13, 18)),
-
         # 7-day
-        *(f"{i*3:03}" for i in range(61, 66))
+        *(f"{i*3:03}" for i in range(61, 66)),
     ]
     for gfs_archive in get_gfs_archives(project, prefix=prefix):
         lockfile = OUTPUT_DIR / "status" / f"{gfs_archive.name}.txt.lock"
@@ -204,7 +205,7 @@ def main(project, year, month, day=None):
 
         logger.info("Parsing archive {}", gfs_archive)
         parse_archive(gfs_archive, envelope, forecasts=forecasts)
-    
+
         with status_file.open("w") as fh:
             fh.write(f"Completed: {datetime.now()}")
         lock.release()

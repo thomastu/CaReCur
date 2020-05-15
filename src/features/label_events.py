@@ -22,6 +22,8 @@ if __name__ == "__main__":
     ]
 
     for cutoff in cutoffs:
-        data[f"curtailment_event_{cutoff:.2f}"] = data["solar_curtailment"]/data["solar"] > cutoff
-    
+        data[f"curtailment_event_{cutoff:.2f}"] = (
+            data["solar_curtailment"] / data["solar"] > cutoff
+        )
+
     data.to_parquet(OUTPUT_DIR / "1_labeled_curtailment_events.parquet")

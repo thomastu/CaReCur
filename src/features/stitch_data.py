@@ -169,7 +169,8 @@ if __name__ == "__main__":
                 column="dswrf_mean", aggfunc=weighted_mean_factory("capacity_mw")
             ),  # W/m^2
             capacity_mw=pd.NamedAgg(column="capacity_mw", aggfunc="sum"),  # MW
-        ).dropna(subset=["t_mean", "dswrf_mean"], how="any")
+        )
+        .dropna(subset=["t_mean", "dswrf_mean"], how="any")
     )
 
     dayahead_daily["installed_capacity"] = dayahead_daily.index.map(daily_capacity)
