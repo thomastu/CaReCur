@@ -44,6 +44,7 @@ filelock = "*"
 ujson = "*"
 scikit-learn = "*"
 pycaret = "*"
+altair-saver = "*"
 
 [requires]
 python_version = "3.8"
