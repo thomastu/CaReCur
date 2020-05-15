@@ -41,14 +41,29 @@
         
   <div class="section" id="data-sources">
 <h1>Data Sources<a class="headerlink" href="#data-sources" title="Permalink to this headline">¶</a></h1>
-<p>The <span class="xref std std-term">CAISO</span> publishes daily reports of curtailment data.</p>
+<div class="section" id="curtailments-data">
+<h2>Curtailments Data<a class="headerlink" href="#curtailments-data" title="Permalink to this headline">¶</a></h2>
+<p>The <span class="xref std std-term">CAISO</span> publishes daily reports of curtailed solar and load at 5-minute increments.   A massive simplifying assumption was to treat the load data as we would a dayahead load forecast.  Curtailment events were classified based on the amount of solar production curtailed relative to the entire day’s worth of production.</p>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents</span></p>
+<p class="caption"><span class="caption-text">Exploration</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/0-ttu-curtailments_eda.html">Exploratory Data Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/0-ttu-curtailments_eda.html#Exploration:-How-much-annual-Curtailment-is-there?">Exploration: How much annual Curtailment is there?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/0-ttu-curtailments_eda.html#Curtailment-Characteristics">Curtailment Characteristics</a></li>
 </ul>
+</div>
+</div>
+<div class="section" id="historic-weather-forecasts">
+<h2>Historic Weather Forecasts<a class="headerlink" href="#historic-weather-forecasts" title="Permalink to this headline">¶</a></h2>
+<p>Historic forecasts from the Global Forecast System were extracted from the NOAA.  A dayahead forecast at 1° spatial resolution at 3-hour intervals were used for this study.  Extracting historic weather forecasts represented a significant amount of data engineering work in this project.  Two features of importance were taken from the dayahead weather forecasts - Temperature and downward shortwave radiation.</p>
+</div>
+<div class="section" id="ca-county-boundaries">
+<h2>CA County Boundaries<a class="headerlink" href="#ca-county-boundaries" title="Permalink to this headline">¶</a></h2>
+<p>Geographic data from California’s open data portal were used to subset global</p>
+</div>
+<div class="section" id="cec-powerplant-locations">
+<h2>CEC Powerplant Locations<a class="headerlink" href="#cec-powerplant-locations" title="Permalink to this headline">¶</a></h2>
+<p>Powerplant locations were used to weight weather features by the installed solar capacity in each county.</p>
 </div>
 </div>
 

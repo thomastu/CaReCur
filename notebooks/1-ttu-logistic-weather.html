@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Predicting Daily Curtailment Events &#8212; California Renewable Curtailments  documentation</title>
+    <title>Example: Predicting Daily Curtailment Events &#8212; California Renewable Curtailments  documentation</title>
     <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
@@ -17,16 +17,22 @@
     <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Model Development" href="3-ttu-train_models.html" />
+    <link rel="prev" title="Methods" href="../methods.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
           <span>California Renewable Curtailments  documentation</span></a></h1>
-        <h2 class="heading"><span>Predicting Daily Curtailment Events</span></h2>
+        <h2 class="heading"><span>Example: Predicting Daily Curtailment Events</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
       
         <p>
+        «&#160;&#160;<a href="../methods.html">Methods</a>
+        &#160;&#160;::&#160;&#160;
         <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="3-ttu-train_models.html">Model Development</a>&#160;&#160;»
         </p>
 
       </div>
@@ -266,22 +272,20 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Predicting-Daily-Curtailment-Events">
-<h1>Predicting Daily Curtailment Events<a class="headerlink" href="#Predicting-Daily-Curtailment-Events" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="Example:-Predicting-Daily-Curtailment-Events">
+<h1>Example: Predicting Daily Curtailment Events<a class="headerlink" href="#Example:-Predicting-Daily-Curtailment-Events" title="Permalink to this headline">¶</a></h1>
 <p>Process Overview:</p>
 <ol class="arabic simple">
 <li><p>Label curtailment events (i.e. define a decision boundary)</p></li>
 <li><p>Partition historic data into training and test sets</p>
 <ol class="arabic simple">
-<li><p>Spring Season (March-May)</p></li>
-<li><p>TODO: Fall season</p></li>
+<li><p>Spring Season (Feb-May)</p></li>
 </ol>
 </li>
 <li><p>Fit a statistical model to the training data</p></li>
 <li><p>Predict against the test data</p></li>
 <li><p>Evaluate the performance of the model against known labels in the test data.</p></li>
 </ol>
-<p>Models: - See Below…</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -1771,7 +1775,11 @@ alt.Chart(...)
       <div class="bottomnav" role="navigation" aria-label="bottom navigation">
       
         <p>
+        «&#160;&#160;<a href="../methods.html">Methods</a>
+        &#160;&#160;::&#160;&#160;
         <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="3-ttu-train_models.html">Model Development</a>&#160;&#160;»
         </p>
 
       </div>

@@ -18,7 +18,7 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="results.html" />
+    <link rel="next" title="Example: Predicting Daily Curtailment Events" href="notebooks/1-ttu-logistic-weather.html" />
     <link rel="prev" title="Exploratory Data Analysis" href="notebooks/0-ttu-curtailments_eda.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
@@ -32,7 +32,7 @@
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="index.html">Contents</a>
         &#160;&#160;::&#160;&#160;
-        <a href="results.html">&lt;no title&gt;</a>&#160;&#160;»
+        <a href="notebooks/1-ttu-logistic-weather.html">Example: Predicting Daily Curtailment Events</a>&#160;&#160;»
         </p>
 
       </div>
@@ -41,7 +41,53 @@
         
   <div class="section" id="methods">
 <h1>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h1>
-<p>Two main methods were used to</p>
+<p>Two branches of statistical learning tools are widely used today:</p>
+<dl class="simple">
+<dt>Unsupervised Learning:</dt><dd><p>An unsupervised learning method takes inbound unlabeled data and extracts or discovers classificiations and labels in the data.</p>
+</dd>
+<dt>Supervised Learning</dt><dd><p>In a supervised learning context, inbound data are labeled and an analyst builds features that they likely believe will hold predictive power.  They might use an understanding of the physics or mechanisms of a system to decide on those features.</p>
+</dd>
+</dl>
+<p>This study explored the use of two supervised learning methods:</p>
+<p>Logistic Regression:</p>
+<blockquote>
+<div><p>A binary classification algorithm which assigns a probability that some set of features could be labeled in a certain way.</p>
+</div></blockquote>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/1-ttu-logistic-weather.html">Example: Predicting Daily Curtailment Events</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/1-ttu-logistic-weather.html#Single-Model-Run">Single Model Run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/1-ttu-logistic-weather.html#Multi-Model-Run">Multi-Model Run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/1-ttu-logistic-weather.html#Visualize-Results">Visualize Results</a></li>
+</ul>
+</div>
+<div class="section" id="statistical-learning-process">
+<h2>Statistical Learning Process<a class="headerlink" href="#statistical-learning-process" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>A class of variables that we want to predict and use to predict are labeled in an existing dataset.  The predictive variables are called “estimators”</p></li>
+<li><p>The data are partitioned into two parts - a “training” set which is used to develop the model, and a “test” set which is used to validate the model.</p></li>
+<li><p>A statistical model is “fit” to the training data, providing a statistical function which could take in new observations and predict the originals labels.</p></li>
+<li><p>The model is used to predict the “test” dataset, and the true label values are compared against the predicted label values.</p></li>
+<li><p>Performance metrics of the model are calculated against the test data.</p></li>
+<li><p>If the model is robust, it could in principle be deployed (either in a programmatic or manual environment) to ingest a future data stream where events are not known a-priori.</p></li>
+</ol>
+<p>The choice of a statistical model</p>
+</div>
+<div class="section" id="tooling">
+<h2>Tooling<a class="headerlink" href="#tooling" title="Permalink to this headline">¶</a></h2>
+<p>The process above was implemented in scikit-learn <a class="bibtex reference internal" href="zreferences.html#scikit-learn" id="id1">[PVG+11]</a>, a popular machine learning library in the python ecosystem.  Other tools of note include:</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://pycaret.org/">pycaret</a></dt><dd><p>PyCaret is a machine learning framework for quickly producing un-optimized a</p>
+</dd>
+</dl>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">notebooks</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/3-ttu-train_models.html">Model Development</a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
@@ -53,7 +99,7 @@
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="index.html">Contents</a>
         &#160;&#160;::&#160;&#160;
-        <a href="results.html">&lt;no title&gt;</a>&#160;&#160;»
+        <a href="notebooks/1-ttu-logistic-weather.html">Example: Predicting Daily Curtailment Events</a>&#160;&#160;»
         </p>
 
       </div>

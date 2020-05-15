@@ -4,21 +4,16 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "# Predicting Daily Curtailment Events\n",
+    "# Example: Predicting Daily Curtailment Events\n",
     "\n",
     "Process Overview:\n",
     "\n",
     "1.  Label curtailment events (i.e. define a decision boundary)\n",
     "2.  Partition historic data into training and test sets\n",
-    "    1.  Spring Season (March-May)\n",
-    "    2.  TODO: Fall season\n",
+    "    1.  Spring Season (Feb-May)\n",
     "3.  Fit a statistical model to the training data\n",
     "4.  Predict against the test data\n",
-    "5.  Evaluate the performance of the model against known labels in the test data.\n",
-    "\n",
-    "\n",
-    "Models:\n",
-    "- See Below..."
+    "5.  Evaluate the performance of the model against known labels in the test data.\n"
    ]
   },
   {

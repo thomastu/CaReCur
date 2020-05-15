@@ -1,0 +1,540 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Model Development &#8212; California Renewable Curtailments  documentation</title>
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "document", "processClass": "math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="../results.html" />
+    <link rel="prev" title="Example: Predicting Daily Curtailment Events" href="1-ttu-logistic-weather.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>California Renewable Curtailments  documentation</span></a></h1>
+        <h2 class="heading"><span>Model Development</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="1-ttu-logistic-weather.html">Example: Predicting Daily Curtailment Events</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="../results.html">&lt;no title&gt;</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container,
+div.nbinput.container div.prompt,
+div.nbinput.container div.input_area,
+div.nbinput.container div[class*=highlight],
+div.nbinput.container div[class*=highlight] pre,
+div.nboutput.container,
+div.nboutput.container div.prompt,
+div.nboutput.container div.output_area,
+div.nboutput.container div[class*=highlight],
+div.nboutput.container div[class*=highlight] pre {
+    background: none;
+    border: none;
+    padding: 0 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    background: #f5f5f5;
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Model-Development">
+<h1>Model Development<a class="headerlink" href="#Model-Development" title="Permalink to this headline">¶</a></h1>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>from src.models import curtailment_classifier
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>curtailment_classifier??
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">Type:</span>        module
+<span class="ansi-red-fg">String form:</span> &lt;module &#39;src.models.curtailment_classifier&#39; from &#39;/home/ttu/repos/CaReCur/src/models/curtailment_classifier.py&#39;&gt;
+<span class="ansi-red-fg">File:</span>        ~/repos/CaReCur/src/models/curtailment_classifier.py
+<span class="ansi-red-fg">Source:</span>
+<span class="ansi-green-fg">import</span> altair <span class="ansi-green-fg">as</span> alt
+<span class="ansi-green-fg">import</span> pandas <span class="ansi-green-fg">as</span> pd
+
+<span class="ansi-green-fg">from</span> sklearn<span class="ansi-blue-fg">.</span>svm <span class="ansi-green-fg">import</span> SVC
+<span class="ansi-green-fg">from</span> sklearn<span class="ansi-blue-fg">.</span>linear_model <span class="ansi-green-fg">import</span> LogisticRegression
+
+<span class="ansi-green-fg">from</span> sklearn<span class="ansi-blue-fg">.</span>compose <span class="ansi-green-fg">import</span> ColumnTransformer
+<span class="ansi-green-fg">from</span> sklearn<span class="ansi-blue-fg">.</span>pipeline <span class="ansi-green-fg">import</span> Pipeline
+<span class="ansi-green-fg">from</span> sklearn<span class="ansi-blue-fg">.</span>preprocessing <span class="ansi-green-fg">import</span> StandardScaler<span class="ansi-blue-fg">,</span> OneHotEncoder
+<span class="ansi-green-fg">from</span> sklearn<span class="ansi-blue-fg">.</span>model_selection <span class="ansi-green-fg">import</span> train_test_split<span class="ansi-blue-fg">,</span> GridSearchCV
+
+<span class="ansi-green-fg">from</span> loguru <span class="ansi-green-fg">import</span> logger
+<span class="ansi-green-fg">from</span> src<span class="ansi-blue-fg">.</span>conf <span class="ansi-green-fg">import</span> settings
+
+
+INPUT_DIR <span class="ansi-blue-fg">=</span> settings<span class="ansi-blue-fg">.</span>DATA_DIR <span class="ansi-blue-fg">/</span> <span class="ansi-blue-fg">&#34;processed/training/&#34;</span>
+OUTPUT_DIR <span class="ansi-blue-fg">=</span> settings<span class="ansi-blue-fg">.</span>DATA_DIR <span class="ansi-blue-fg">/</span> <span class="ansi-blue-fg">&#34;processed/results/&#34;</span>
+
+
+<span class="ansi-green-fg">class</span> BaseModel<span class="ansi-blue-fg">:</span>
+    <span class="ansi-green-fg">def</span> __init__<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> data<span class="ansi-blue-fg">,</span> y_col<span class="ansi-blue-fg">,</span> n_vars<span class="ansi-blue-fg">,</span> c_vars<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        self<span class="ansi-blue-fg">.</span>X <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">[</span>n_vars <span class="ansi-blue-fg">+</span> c_vars<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>copy<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+        self<span class="ansi-blue-fg">.</span>y <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">[</span>y_col<span class="ansi-blue-fg">]</span>
+        self<span class="ansi-blue-fg">.</span>n_vars <span class="ansi-blue-fg">=</span> n_vars
+        self<span class="ansi-blue-fg">.</span>c_vars <span class="ansi-blue-fg">=</span> c_vars
+
+    <span class="ansi-green-fg">def</span> build_model<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> regressor<span class="ansi-blue-fg">,</span> numeric_vars<span class="ansi-blue-fg">,</span> categorical_vars<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        <span class="ansi-blue-fg">&#34;&#34;&#34;Build a generic model</span>
+<span class="ansi-blue-fg">        &#34;&#34;&#34;</span>
+        numeric_transformer <span class="ansi-blue-fg">=</span> Pipeline<span class="ansi-blue-fg">(</span>
+            steps<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span>
+                <span class="ansi-red-fg"># Convert all numeric values to units of variance.</span>
+                <span class="ansi-red-fg"># This helps us avoid weird number conditions when using</span>
+                <span class="ansi-red-fg"># sklearn with very big and very small numbers.</span>
+                <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;scaler&#34;</span><span class="ansi-blue-fg">,</span> StandardScaler<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+            <span class="ansi-blue-fg">]</span>
+        <span class="ansi-blue-fg">)</span>
+        categorical_transformer <span class="ansi-blue-fg">=</span> Pipeline<span class="ansi-blue-fg">(</span>
+            steps<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span>
+                <span class="ansi-red-fg"># Use one-hot encoding to handle categoricals like weekday and month</span>
+                <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;onehot&#34;</span><span class="ansi-blue-fg">,</span> OneHotEncoder<span class="ansi-blue-fg">(</span>handle_unknown<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">&#34;ignore&#34;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+            <span class="ansi-blue-fg">]</span>
+        <span class="ansi-blue-fg">)</span>
+
+        preprocessor <span class="ansi-blue-fg">=</span> ColumnTransformer<span class="ansi-blue-fg">(</span>
+            transformers<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span>
+                <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;num&#34;</span><span class="ansi-blue-fg">,</span> numeric_transformer<span class="ansi-blue-fg">,</span> numeric_vars<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>
+                <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;cat&#34;</span><span class="ansi-blue-fg">,</span> categorical_transformer<span class="ansi-blue-fg">,</span> categorical_vars<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span>
+            <span class="ansi-blue-fg">]</span>
+        <span class="ansi-blue-fg">)</span>
+
+        clf <span class="ansi-blue-fg">=</span> Pipeline<span class="ansi-blue-fg">(</span>
+            steps<span class="ansi-blue-fg">=</span><span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;preprocessor&#34;</span><span class="ansi-blue-fg">,</span> preprocessor<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;classifier&#34;</span><span class="ansi-blue-fg">,</span> regressor<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span>
+        <span class="ansi-blue-fg">)</span>
+        <span class="ansi-green-fg">return</span> clf
+
+    <span class="ansi-green-fg">def</span> model<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        <span class="ansi-blue-fg">&#34;&#34;&#34;Define the relevant model for this class</span>
+<span class="ansi-blue-fg">        &#34;&#34;&#34;</span>
+        <span class="ansi-green-fg">raise</span> NotImplementedError
+
+    <span class="ansi-green-fg">def</span> fit_train_predict<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> clf<span class="ansi-blue-fg">,</span> test_size<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">0.2</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        <span class="ansi-blue-fg">&#34;&#34;&#34;</span>
+<span class="ansi-blue-fg">        &#34;&#34;&#34;</span>
+        X_train<span class="ansi-blue-fg">,</span> X_test<span class="ansi-blue-fg">,</span> y_train<span class="ansi-blue-fg">,</span> y_test <span class="ansi-blue-fg">=</span> train_test_split<span class="ansi-blue-fg">(</span>
+            self<span class="ansi-blue-fg">.</span>X<span class="ansi-blue-fg">.</span>copy<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>y<span class="ansi-blue-fg">.</span>copy<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> test_size<span class="ansi-blue-fg">=</span>test_size
+        <span class="ansi-blue-fg">)</span>
+        clf<span class="ansi-blue-fg">.</span>fit<span class="ansi-blue-fg">(</span>X_train<span class="ansi-blue-fg">,</span> y_train<span class="ansi-blue-fg">)</span>
+        predictions <span class="ansi-blue-fg">=</span> clf<span class="ansi-blue-fg">.</span>predict_proba<span class="ansi-blue-fg">(</span>X_test<span class="ansi-blue-fg">)</span>
+        predictions <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>DataFrame<span class="ansi-blue-fg">(</span>
+            clf<span class="ansi-blue-fg">.</span>predict_proba<span class="ansi-blue-fg">(</span>X_test<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">,</span> columns<span class="ansi-blue-fg">=</span>list<span class="ansi-blue-fg">(</span>map<span class="ansi-blue-fg">(</span>str<span class="ansi-blue-fg">,</span> clf<span class="ansi-blue-fg">.</span>classes_<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+        <span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>assign<span class="ansi-blue-fg">(</span>actual<span class="ansi-blue-fg">=</span>y_test<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">)</span>
+        <span class="ansi-green-fg">return</span> predictions
+
+    <span class="ansi-green-fg">def</span> run<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> trials<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">100</span><span class="ansi-blue-fg">,</span> test_size<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">0.2</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        <span class="ansi-blue-fg">&#34;&#34;&#34;Resample and re-run the model multiple times.</span>
+<span class="ansi-blue-fg">        &#34;&#34;&#34;</span>
+        clf <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>model<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+        predictions <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">]</span>
+        <span class="ansi-green-fg">for</span> i <span class="ansi-green-fg">in</span> range<span class="ansi-blue-fg">(</span>trials<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+            p <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>fit_train_predict<span class="ansi-blue-fg">(</span>clf<span class="ansi-blue-fg">,</span> test_size<span class="ansi-blue-fg">=</span>test_size<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">.</span>assign<span class="ansi-blue-fg">(</span>trial<span class="ansi-blue-fg">=</span>i<span class="ansi-blue-fg">)</span>
+            predictions<span class="ansi-blue-fg">.</span>append<span class="ansi-blue-fg">(</span>p<span class="ansi-blue-fg">)</span>
+        <span class="ansi-green-fg">return</span> pd<span class="ansi-blue-fg">.</span>concat<span class="ansi-blue-fg">(</span>predictions<span class="ansi-blue-fg">,</span> ignore_index<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span>
+
+
+<span class="ansi-green-fg">class</span> Logistic<span class="ansi-blue-fg">(</span>BaseModel<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+    <span class="ansi-green-fg">def</span> model<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        lr <span class="ansi-blue-fg">=</span> LogisticRegression<span class="ansi-blue-fg">(</span>fit_intercept<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">)</span>
+        clf <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>build_model<span class="ansi-blue-fg">(</span>lr<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>n_vars<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>c_vars<span class="ansi-blue-fg">)</span>
+        <span class="ansi-green-fg">return</span> clf
+
+<span class="ansi-green-fg">class</span> SVM<span class="ansi-blue-fg">(</span>BaseModel<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+    <span class="ansi-green-fg">def</span> model<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+        sv <span class="ansi-blue-fg">=</span>  SVC<span class="ansi-blue-fg">(</span>probability<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span>
+        clf <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>build_model<span class="ansi-blue-fg">(</span>sv<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>n_vars<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>c_vars<span class="ansi-blue-fg">)</span>
+        <span class="ansi-green-fg">return</span> clf
+
+
+<span class="ansi-green-fg">def</span> plot_results<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> predictions<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+    <span class="ansi-green-fg">pass</span>
+
+
+<span class="ansi-green-fg">def</span> LR_seasonal_load<span class="ansi-blue-fg">(</span>df<span class="ansi-blue-fg">,</span> y_col<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+    <span class="ansi-blue-fg">&#34;&#34;&#34;</span>
+<span class="ansi-blue-fg">    &#34;&#34;&#34;</span>
+    model <span class="ansi-blue-fg">=</span> Logistic<span class="ansi-blue-fg">(</span>df<span class="ansi-blue-fg">,</span> y_col<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;load&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;is_weekday&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;month&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+    results <span class="ansi-blue-fg">=</span> model<span class="ansi-blue-fg">.</span>run<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">return</span> results
+
+
+<span class="ansi-green-fg">def</span> LR_seasonal_load_with_weather<span class="ansi-blue-fg">(</span>df<span class="ansi-blue-fg">,</span> y_col<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+    <span class="ansi-blue-fg">&#34;&#34;&#34;</span>
+<span class="ansi-blue-fg">    curtailment_event ~ load + C(is_weekday) + C(month) + t_mean + t_absmin + t_absmax + dswrf_mean + dswrf_absmax</span>
+<span class="ansi-blue-fg">    &#34;&#34;&#34;</span>
+    model <span class="ansi-blue-fg">=</span> Logistic<span class="ansi-blue-fg">(</span>
+        df<span class="ansi-blue-fg">,</span>
+        y_col<span class="ansi-blue-fg">,</span>
+        <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;load&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;t_mean&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;t_absmax&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;t_absmin&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;dswrf_mean&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;dswrf_absmax&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span>
+        <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;is_weekday&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;month&#34;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span>
+    <span class="ansi-blue-fg">)</span>
+    results <span class="ansi-blue-fg">=</span> model<span class="ansi-blue-fg">.</span>run<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">return</span> results
+
+
+<span class="ansi-green-fg">def</span> LR_seasonal_load_with_weather_capacity_weighted<span class="ansi-blue-fg">(</span>df<span class="ansi-blue-fg">,</span> y_col<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+    model <span class="ansi-blue-fg">=</span> Logistic<span class="ansi-blue-fg">(</span>
+        df<span class="ansi-blue-fg">,</span>
+        y_col<span class="ansi-blue-fg">,</span>
+        <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;load&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;t_wmean&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;t_wmin&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;t_wmax&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;dswrf_wmean&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;dswrf_absmax&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span>
+        <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;is_weekday&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;month&#34;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span>
+    <span class="ansi-blue-fg">)</span>
+    results <span class="ansi-blue-fg">=</span> model<span class="ansi-blue-fg">.</span>run<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">return</span> results
+
+
+<span class="ansi-green-fg">def</span> SVM_seasonal_load_with_weather_capacity_weighted<span class="ansi-blue-fg">(</span>df<span class="ansi-blue-fg">,</span> y_col<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+    model <span class="ansi-blue-fg">=</span> SVM<span class="ansi-blue-fg">(</span>
+        df<span class="ansi-blue-fg">,</span>
+        y_col<span class="ansi-blue-fg">,</span>
+        <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;load&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;t_wmean&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;t_wmin&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;t_wmax&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;dswrf_wmean&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;dswrf_absmax&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span>
+        <span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;is_weekday&#34;</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#34;month&#34;</span><span class="ansi-blue-fg">,</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span>
+    <span class="ansi-blue-fg">)</span>
+    results <span class="ansi-blue-fg">=</span> model<span class="ansi-blue-fg">.</span>run<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+    <span class="ansi-green-fg">return</span> results
+
+registry <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>
+    LR_seasonal_load<span class="ansi-blue-fg">,</span>
+    LR_seasonal_load_with_weather<span class="ansi-blue-fg">,</span>
+    LR_seasonal_load_with_weather_capacity_weighted<span class="ansi-blue-fg">,</span>
+    SVM_seasonal_load_with_weather_capacity_weighted<span class="ansi-blue-fg">,</span>
+<span class="ansi-blue-fg">]</span>
+
+
+<span class="ansi-green-fg">if</span> __name__ <span class="ansi-blue-fg">==</span> <span class="ansi-blue-fg">&#34;__main__&#34;</span><span class="ansi-blue-fg">:</span>
+    OUTPUT_DIR<span class="ansi-blue-fg">.</span>mkdir<span class="ansi-blue-fg">(</span>exist_ok<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">True</span><span class="ansi-blue-fg">)</span>
+    data <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>read_parquet<span class="ansi-blue-fg">(</span>INPUT_DIR <span class="ansi-blue-fg">/</span> <span class="ansi-blue-fg">&#34;1_labeled_curtailment_events.parquet&#34;</span><span class="ansi-blue-fg">)</span>
+
+    <span class="ansi-red-fg"># ad-hoc minute feature labeling to support sklearn</span>
+    data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;month&#34;</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">[</span><span class="ansi-blue-fg">&#34;timestamp&#34;</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>dt<span class="ansi-blue-fg">.</span>month
+
+    events <span class="ansi-blue-fg">=</span> data<span class="ansi-blue-fg">.</span>columns<span class="ansi-blue-fg">[</span>data<span class="ansi-blue-fg">.</span>columns<span class="ansi-blue-fg">.</span>str<span class="ansi-blue-fg">.</span>match<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">r&#34;curtailment_event_\d.\d\d&#34;</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span>
+    results <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span><span class="ansi-blue-fg">}</span>
+    <span class="ansi-green-fg">for</span> m <span class="ansi-green-fg">in</span> registry<span class="ansi-blue-fg">:</span>
+        <span class="ansi-green-fg">for</span> event <span class="ansi-green-fg">in</span> events<span class="ansi-blue-fg">:</span>
+            logger<span class="ansi-blue-fg">.</span>info<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">&#34;Training {m} on {event}&#34;</span><span class="ansi-blue-fg">,</span> event<span class="ansi-blue-fg">=</span>event<span class="ansi-blue-fg">,</span> m<span class="ansi-blue-fg">=</span>m<span class="ansi-blue-fg">.</span>__name__<span class="ansi-blue-fg">)</span>
+            predictions <span class="ansi-blue-fg">=</span> m<span class="ansi-blue-fg">(</span>data<span class="ansi-blue-fg">,</span> event<span class="ansi-blue-fg">)</span>
+            results<span class="ansi-blue-fg">[</span>m<span class="ansi-blue-fg">.</span>__name__<span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">{</span>event<span class="ansi-blue-fg">:</span> predictions<span class="ansi-blue-fg">}</span>
+            fn <span class="ansi-blue-fg">=</span> OUTPUT_DIR <span class="ansi-blue-fg">/</span> <span class="ansi-blue-fg">f&#34;predictions-{m.__name__}-{event}.parquet&#34;</span>
+            predictions<span class="ansi-blue-fg">.</span>to_parquet<span class="ansi-blue-fg">(</span>fn<span class="ansi-blue-fg">,</span> index<span class="ansi-blue-fg">=</span><span class="ansi-green-fg">False</span><span class="ansi-blue-fg">)</span>
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>%run ../src/models/curtailment_classifier.py
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2020-05-15 11:38:33.252 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load on curtailment_event_0.01
+2020-05-15 11:38:35.012 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load on curtailment_event_0.03
+2020-05-15 11:38:36.449 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load on curtailment_event_0.05
+2020-05-15 11:38:37.913 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load on curtailment_event_0.10
+2020-05-15 11:38:39.323 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load_with_weather on curtailment_event_0.01
+2020-05-15 11:38:41.022 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load_with_weather on curtailment_event_0.03
+2020-05-15 11:38:42.842 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load_with_weather on curtailment_event_0.05
+2020-05-15 11:38:44.555 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load_with_weather on curtailment_event_0.10
+2020-05-15 11:38:46.173 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load_with_weather_capacity_weighted on curtailment_event_0.01
+2020-05-15 11:38:47.754 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load_with_weather_capacity_weighted on curtailment_event_0.03
+2020-05-15 11:38:49.442 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load_with_weather_capacity_weighted on curtailment_event_0.05
+2020-05-15 11:38:51.050 | INFO     | __main__:&lt;module&gt;:167 - Training LR_seasonal_load_with_weather_capacity_weighted on curtailment_event_0.10
+2020-05-15 11:38:52.646 | INFO     | __main__:&lt;module&gt;:167 - Training SVM_seasonal_load_with_weather_capacity_weighted on curtailment_event_0.01
+2020-05-15 11:38:54.826 | INFO     | __main__:&lt;module&gt;:167 - Training SVM_seasonal_load_with_weather_capacity_weighted on curtailment_event_0.03
+2020-05-15 11:38:57.049 | INFO     | __main__:&lt;module&gt;:167 - Training SVM_seasonal_load_with_weather_capacity_weighted on curtailment_event_0.05
+2020-05-15 11:38:59.194 | INFO     | __main__:&lt;module&gt;:167 - Training SVM_seasonal_load_with_weather_capacity_weighted on curtailment_event_0.10
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="1-ttu-logistic-weather.html">Example: Predicting Daily Curtailment Events</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="../results.html">&lt;no title&gt;</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright Thomas Tu, 2020.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.4.
+    </div>
+  </body>
+</html>
