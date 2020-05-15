@@ -18,4 +18,4 @@ As intermittent sources of generation continue to grow, overcapacity may result 
 Problem Statement
 -----------------
 
-This project attempts to produce a statistical model trained on publicly available historic forecasts, and past curtailment events in California to predict whether the state of the California grid could end up 
+This project attempts to produce a statistical model trained on publicly available historic forecasts, and past curtailment events in California to predict whether the state of the California grid would end up producing a significant curtailment event.
