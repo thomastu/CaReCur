@@ -6,6 +6,7 @@ To start, curtailment events will be defined as cutoff values in daily curtailme
 """
 import pandas as pd
 
+from loguru import logger
 from src.conf import settings
 
 OUTPUT_DIR = settings.DATA_DIR / "processed/training/"
@@ -17,13 +18,15 @@ if __name__ == "__main__":
 
     cutoffs = [
         0.01,
+        0.03,
         0.05,
         0.1,
     ]
 
     for cutoff in cutoffs:
+        logger.debug("Labeling curtailment events with {cutoff} pct curtailed of total production.", cutoff=cutoff)
         data[f"curtailment_event_{cutoff:.2f}"] = (
             data["solar_curtailment"] / data["solar"] > cutoff
         )
 
-    data.to_parquet(OUTPUT_DIR / "1_labeled_curtailment_events.parquet")
+    data.to_parquet(OUTPUT_DIR / "1_labeled_curtailment_events.parquet", index=False)

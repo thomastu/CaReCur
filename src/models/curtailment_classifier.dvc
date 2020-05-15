@@ -1,0 +1,12 @@
+md5: 21eb714ed40cd6199adc6d6bd0c42787
+cmd: python src/models/curtailment_classifier.py
+wdir: ../..
+deps:
+- md5: b04a871442ba7544244420a0f8a5147e
+  path: data/processed/training/1_labeled_curtailment_events.parquet
+outs:
+- md5: 49a911d21bafdef6443968bffbebe260.dir
+  path: data/processed/results
+  cache: true
+  metric: false
+  persist: false

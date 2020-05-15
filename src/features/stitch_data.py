@@ -132,7 +132,7 @@ if __name__ == "__main__":
         dswrf_mean=("dswrf", "mean"),
         dswrf_max=("dswrf", "max"),
         capacity_mw=("capacity_mw", "mean"),
-    )
+    ).reset_index()
 
     def weighted_mean_factory(weight_col):
         def weighted_avg(s):
