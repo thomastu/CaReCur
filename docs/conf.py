@@ -10,6 +10,12 @@ from dynaconf import settings
 
 # -- Project Information ------
 
+import os
+import sys
+
+# Autodoc!
+sys.path.insert(0, os.path.abspath('..'))
+
 # Project or Documentation Title
 project = settings.get("project_title", "My Project")
 
@@ -63,12 +69,14 @@ extensions = [
     # PlantUML driven Diagrams
     "sphinx.ext.graphviz",
     "sphinxcontrib.plantuml",
+    "sphinx.ext.napoleon",
 
     # Citations and Reference Management
     "sphinxcontrib.bibtex",
 
     # Markdown Support
     "recommonmark",
+    
 ]
 
 # TODO: Add in other extensions in the toml file

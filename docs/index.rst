@@ -1,11 +1,20 @@
 California Renewable Curtailments Study
 ***************************************
 
+.. include:: ./foreword.rst
+
+
+Table of Contents
+-----------------
+
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
 
    background
-   notebooks/0-ttu-curtailments_eda
-   notebooks/1-ttu-predict-production
+   data_sources
+   methods
+   results
+   conclusion
+   appendix
    zreferences
