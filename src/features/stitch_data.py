@@ -1,64 +1,4 @@
 """Build daily-level feature sets, stitching together weather datasets and defining features.
-
-
-Curtailment Data:
-
-    timestamp                         datetime64[ns, US/Pacific]
-    load                                                 float64
-    solar                                                float64
-    wind                                                 float64
-    net_load                                             float64
-    renewables                                           float64
-    nuclear                                              float64
-    large_hydro                                          float64
-    imports                                              float64
-    generation                                           float64
-    thermal                                              float64
-    load_less_(generation+imports)                       float64
-    wind_curtailment                                     float64
-    solar_curtailment                                    float64
-
-
-Weather Data:
-
-    latitude                          float64
-    longitude                         float64
-    t                                 float32
-    gust                              float32
-    tp                                float32
-    dswrf                             float32
-    uswrf                             float32
-    SUNSD                             float32
-    al                                float32
-    sp                                float32
-    csnow                             float32
-    cicep                             float32
-    cfrzr                             float32
-    crain                             float32
-    sde                               float32
-    surface                             int64
-    time                       datetime64[ns]
-    valid_time                 datetime64[ns]
-    index_right                         int64
-    STATEFP                            object
-    COUNTYFP                           object
-    COUNTYNS                           object
-    GEOID                              object
-    NAME                               object
-    NAMELSAD                           object
-    LSAD                               object
-    CLASSFP                            object
-    MTFCC                              object
-    CSAFP                              object
-    CBSAFP                             object
-    METDIVFP                           object
-    FUNCSTAT                           object
-    ALAND                               int64
-    AWATER                              int64
-    INTPTLAT                           object
-    INTPTLON                           object
-    timestamp      datetime64[ns, US/Pacific]
-
 """
 import numpy as np
 import pandas as pd
@@ -74,7 +14,7 @@ from src.conf import settings
 start_year = 2017
 end_year = 2019
 
-TRAINING_DIR = settings.DATA_DIR / "processed/training/"
+OUTPUT_DIR = settings.DATA_DIR / "processed/training/"
 
 
 if __name__ == "__main__":
@@ -183,39 +123,53 @@ if __name__ == "__main__":
         .sum()
     )
 
+    county_level_dailies = dayahead_weather.groupby(
+        by=["GEOID", pd.Grouper(key="timestamp", freq="D")], as_index=True
+    ).agg(
+        t_min=("t", "min"),
+        t_max=("t", "max"),
+        t_mean=("t", "mean"),
+        dswrf_mean=("dswrf", "mean"),
+        dswrf_max=("dswrf", "max"),
+        capacity_mw=("capacity_mw", "mean"),
+    )
+
+    def weighted_mean_factory(weight_col):
+        def weighted_avg(s):
+            if s.empty:
+                return 0.0
+            else:
+                return np.average(s, weights=dayahead_weather.loc[s.index, weight_col])
+
+        weighted_avg.__name__ = f"{weight_col}_wmean"
+
+        return weighted_avg
+
+    # GFS is missing certain days for one reason or another.
+    # Furthermore, pandas timestamps fill in timesteps to build a full frequency datetime
+    # Since we don't have continuity in time, we ignore those.
     dayahead_daily = (
-        dayahead_weather.groupby(
-            by=pd.Grouper(key="timestamp", freq="D"), observed=True,
-        )
+        county_level_dailies.groupby(by=pd.Grouper(key="timestamp", freq="D"),)
         .agg(
-            mean_temperature=pd.NamedAgg(column="t", aggfunc="mean"),
-            downward_shortwave_radiation=pd.NamedAgg(column="dswrf", aggfunc="mean"),
-            upward_shortwave_radation=pd.NamedAgg(column="uswrf", aggfunc="mean"),
-            sunshine_duration=pd.NamedAgg(column="SUNSD", aggfunc="mean"),
-            dswrf_weighted_temperature=pd.NamedAgg(
-                column="t",
-                aggfunc=lambda s: 0.0
-                if s.empty
-                else np.average(s, weights=dayahead_weather.loc[s.index, "dswrf"]),
-            ),
-            capacity_weighted_temperature=pd.NamedAgg(
-                column="t",
-                aggfunc=lambda s: 0.0
-                if s.empty
-                else np.average(
-                    s, weights=dayahead_weather.loc[s.index, "capacity_mw"]
-                ),
-            ),
-            capacity_weighted_dswrf=pd.NamedAgg(
-                column="dswrf",
-                aggfunc=lambda s: 0.0
-                if s.empty
-                else np.average(
-                    s, weights=dayahead_weather.loc[s.index, "capacity_mw"]
-                ),
-            ),
-        )
-        .dropna(subset=["mean_temperature",], how="any")
+            t_mean=pd.NamedAgg(column="t_mean", aggfunc="mean"),  # K
+            t_wmean=pd.NamedAgg(
+                column="t_mean", aggfunc=weighted_mean_factory("capacity_mw")
+            ),  # K
+            t_wmax=pd.NamedAgg(
+                column="t_max", aggfunc=weighted_mean_factory("capacity_mw")
+            ),  # K
+            t_wmin=pd.NamedAgg(
+                column="t_min", aggfunc=weighted_mean_factory("capacity_mw")
+            ),  # K
+            t_absmax=pd.NamedAgg(column="t_max", aggfunc="max",),  # K
+            t_absmin=pd.NamedAgg(column="t_min", aggfunc="min",),  # K
+            dswrf_mean=pd.NamedAgg(column="dswrf_mean", aggfunc="mean"),  # W/m^2
+            dswrf_absmax=pd.NamedAgg(column="dswrf_max", aggfunc="max"),  # W/m^2
+            dswrf_wmean=pd.NamedAgg(
+                column="dswrf_mean", aggfunc=weighted_mean_factory("capacity_mw")
+            ),  # W/m^2
+            capacity_mw=pd.NamedAgg(column="capacity_mw", aggfunc="sum"),  # MW
+        ).dropna(subset=["t_mean", "dswrf_mean"], how="any")
     )
 
     dayahead_daily["installed_capacity"] = dayahead_daily.index.map(daily_capacity)
@@ -225,26 +179,7 @@ if __name__ == "__main__":
     daily_feature_data["solar_capacity_factor"] = daily_feature_data["solar"] / (
         daily_feature_data["installed_capacity"] * 24
     )
-    # timestamp                        datetime64[ns, US/Pacific]
-    # solar_curtailment                                   float64
-    # solar                                               float64
-    # net_load                                            float64
-    # load                                                float64
-    # generation                                          float64
-    # renewables                                          float64
-    # wind_curtailment                                    float64
-    # is_weekday                                             bool
-    # mean_temperature                                    float32
-    # downward_shortwave_radiation                        float32
-    # upward_shortwave_radation                           float32
-    # sunshine_duration                                   float32
-    # dswrf_weighted_temperature                          float32
-    # capacity_weighted_temperature                       float32
-    # installed_capacity                                  float64
-    # solar_capacity_factor                               float64
-    # dtype: object
-
 
     daily_feature_data.to_parquet(
-        TRAINING_DIR / "0_labeled_data_daily.parquet", engine="fastparquet"
+        OUTPUT_DIR / "0_labeled_data_daily.parquet", engine="fastparquet"
     )

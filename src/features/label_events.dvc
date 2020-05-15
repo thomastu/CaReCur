@@ -1,0 +1,12 @@
+md5: 8f7a4d7001b5661832e8f4b876b12e8a
+cmd: python src/features/label_events.py
+wdir: ../..
+deps:
+- md5: e9dfa15e48e9f4e2198d7fd7a068b608
+  path: data/processed/training/0_labeled_data_daily.parquet
+outs:
+- md5: 95aa09294a33ed2fc431ffc0125b5b12
+  path: data/processed/training/1_labeled_curtailment_events.parquet
+  cache: true
+  metric: false
+  persist: false
